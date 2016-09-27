@@ -8,6 +8,7 @@
     <XMLVersion>100</XMLVersion>
     <ShopVersion>317</ShopVersion>
 	<Shop4Version>400</Shop4Version>
+	<Icon>preview.png</Icon>
     <PluginID>jtl_mailchimp3</PluginID>
     <Install>
         <Version nr="100">
