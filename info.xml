@@ -1,0 +1,18 @@
+
+<?xml version='1.0' encoding="ISO-8859-1"?>
+<jtlshop3plugin>
+    <Name>JTL MailChimp (API 3.0)</Name>
+    <Description>MailChimp 3.0 Integration für JTL-Shop</Description>
+    <Author>JTL-Software-GmbH</Author>
+    <URL>http://www.jtl-software.de</URL>
+    <XMLVersion>100</XMLVersion>
+    <ShopVersion>317</ShopVersion>
+	<Shop4Version>400</Shop4Version>
+    <PluginID>jtl_mailchimp3</PluginID>
+    <Install>
+        <Version nr="100">
+            <CreateDate>2016-09-27</CreateDate>
+        </Version>
+
+    </Install>
+</jtlshop3plugin>
