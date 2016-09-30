@@ -1,16 +1,12 @@
-CREATE TABLE `xplugin_jtl_example_foo` (
-		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`foo` INT NOT NULL,
-		`bar` TINYINT NOT NULL,
-		`text` TEXT
-);
+CREATE TABLE IF NOT EXISTS `xplugin_jtl_mailchimp3_sync` (
+      `kSync` int(10) NOT NULL AUTO_INCREMENT
+    , `kNewsletterReceiver` int(10) DEFAULT NULL COMMENT 'ID of the NL-Receiver from `tnewsletterempfaenger`.`kNewsletterEmpfaenger`'
+    , `cListId` varchar(255) DEFAULT NULL COMMENT 'List-ID of a MailChimp subscriber-list'
+    , `cEUID` varchar(255) DEFAULT NULL
+    , `cLEID` varchar(255) DEFAULT NULL
+    , `dSync` datetime DEFAULT NULL
+    , `dLastSync` datetime DEFAULT NULL
+    , PRIMARY KEY (`kSync`)
+    , UNIQUE KEY `kNewsletterReceiver` (`kNewsletterReceiver`)
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
-CREATE TABLE IF NOT EXISTS `xplugin_jtl_example_bar` (
-		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`foo` INT NOT NULL,
-		`bar` TINYINT NOT NULL
-);
-
-INSERT INTO `xplugin_jtl_example_foo` (`foo`, `bar`, `text`) VALUES (22, 1, 'Foobar!');
-INSERT INTO `xplugin_jtl_example_foo` (`foo`, `bar`, `text`) VALUES (44, 3, 'Foobar text 2!');
-INSERT INTO `xplugin_jtl_example_bar` (`foo`, `bar`) VALUES (123456, 2);

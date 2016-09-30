@@ -12,6 +12,7 @@
     <Install>
         <Version nr="100">
             <CreateDate>2016-09-27</CreateDate>
+			<SQL>install-100.sql</SQL>
         </Version>
 
         <Hooks>
@@ -22,9 +23,13 @@
 
 		<Adminmenu>
 			<Customlink sort="1">
-				<Name>Testtab</Name>
-				<Filename>jtl_example_testtab.php</Filename>
+				<Name>Abonnenten</Name>
+				<Filename>tab_abonnenten.php</Filename>
 			</Customlink>
+            <Customlink sort="3">
+                <Name>Initialisierung</Name>
+				<Filename>tab_initialize.php</Filename>
+            </Customlink>
 			<Settingslink sort="2">
 				<Setting type="text" initialValue="" sort="0" conf="N">
 					<Name>Allgemein</Name>
@@ -34,123 +39,9 @@
 				<Name>Einstellungen</Name>
 				<Setting type="text" initialValue="" sort="1" conf="Y">
 					<Name>API-Key</Name>
-					<Description>Den API-Key finden Sie in Ihrem MailChimp-Account unter 'Extras->API-Key'</Description>
-					<ValueName>mc3_api_key</ValueName>
+					<Description>Den API-Key finden Sie in Ihrem MailChimp-Account unter 'Account->Extras->API-Key'</Description>
+					<ValueName>jtl_mailchimp3_api_key</ValueName>
 				</Setting>
-                <!-- -->
-                <!--
-				<Setting type="selectbox" initialValue="1" sort="2" conf="Y">
-					<Name>Selectbox Test</Name>
-					<Description>Beschreibung2</Description>
-					<ValueName>jtl_example_2</ValueName>
-					<OptionsSource>
-						<File>jtl_example_selectsource1.php</File>
-					</OptionsSource>
-					<SelectboxOptions>
-						<Option value="0" sort="1">Option 1</Option>
-						<Option value="1" sort="2">Option 2</Option>
-						<Option value="2" sort="3">Option 3</Option>
-					</SelectboxOptions>
-				</Setting>
-				<Setting type="textarea" initialValue="Hallo Welt!" sort="3" conf="Y">
-					<Name>Textarea Test</Name>
-					<Description>Beschreibung Nummer 3</Description>
-					<ValueName>jtl_example_3</ValueName>
-				</Setting>
-				<Setting type="checkbox" initialValue="" sort="4" conf="Y">
-					<Name>Checkbox Test</Name>
-					<Description>Beschreibung Nummer 4</Description>
-					<ValueName>jtl_example_4</ValueName>
-				</Setting>
-				<Setting type="checkbox" initialValue="on" sort="5" conf="Y">
-					<Name>Checkbox Test aktiv</Name>
-					<Description>Beschreibung Nummer 5</Description>
-					<ValueName>jtl_example_5</ValueName>
-				</Setting>
-				<Setting type="radio" initialValue="1" sort="6" conf="Y">
-					<Name>Radio Test</Name>
-					<Description>Beschreibung 6</Description>
-					<ValueName>jtl_example_6</ValueName>
-					<OptionsSource>
-						<File>jtl_example_radiosource1.php</File>
-					</OptionsSource>
-					<RadioOptions>
-						<Option value="0" sort="1">Option 1</Option>
-						<Option value="1" sort="2">Option 2</Option>
-						<Option value="2" sort="3">Option 3</Option>
-					</RadioOptions>
-				</Setting>
-				<Setting type="selectbox" initialValue="1" sort="7" conf="Y">
-					<Name>Selectbox mit Artikeln</Name>
-					<Description>Hier sollten Artikel angezeigt werden</Description>
-					<ValueName>jtl_example_products</ValueName>
-					<OptionsSource>
-						<File>jtl_example_selectsource2.php</File>
-					</OptionsSource>
-					<SelectboxOptions>
-						<Option value="0" sort="1">Leider fehlgeschlagen</Option>
-					</SelectboxOptions>
-				</Setting>
-				<Setting type="selectbox" initialValue="0" sort="8" conf="Y">
-					<Name>Debug-Modus</Name>
-					<Description>Aktiviert den Debug-Modus</Description>
-					<ValueName>jtl_example_debug</ValueName>
-					<SelectboxOptions>
-						<Option value="N" sort="1">Nein</Option>
-						<Option value="Y" sort="2">Ja</Option>
-					</SelectboxOptions>
-				</Setting>
-				<Setting type="text" initialValue="" sort="9" conf="N">
-					<Name>PHP-Query</Name>
-					<ValueName>Spacer</ValueName>
-					<Description></Description>
-				</Setting>
-				<Setting type="text" initialValue="#content" sort="10" conf="Y">
-					<Name>PHP-Query-Selektor</Name>
-					<Description>Ein beliebiger PHP-Query-Selektor</Description>
-					<ValueName>jtl_exmple_pqselector</ValueName>
-				</Setting>
-				<Setting type="selectbox" initialValue="append" sort="11" conf="Y">
-					<Name>PHP-Query-Funktion</Name>
-					<Description>Welche Funktion soll für das Einfügen des Templates verwendet werden?</Description>
-					<ValueName>jtl_example_pqfunction</ValueName>
-					<SelectboxOptions>
-						<Option value="append" sort="1">append() - Als als letztes Kind in Selektor einfügen</Option>
-						<Option value="prepend" sort="2">prepend() - Als erstes Kind in Selektor einfügen</Option>
-						<Option value="after" sort="3">after() - Nach Selektor einfügen</Option>
-						<Option value="before" sort="4">before() - Vor Selektor einfügen</Option>
-						<Option value="replaceWith" sort="4">replaceWith() - Selektor durch Inhalt ersetzen</Option>
-					</SelectboxOptions>
-				</Setting>
-				<Setting type="text" initialValue="" sort="20" conf="N">
-					<Name>Modifikationen</Name>
-					<ValueName>Spacer</ValueName>
-					<Description></Description>
-				</Setting>
-				<Setting type="selectbox" initialValue="Y" sort="21" conf="Y">
-					<Name>Produkte modifizieren?</Name>
-					<Description>Hängt den konfigurierten Text an Produktnamen, -beschreibungen und -kurzbeschreibungen an.</Description>
-					<ValueName>modify_products</ValueName>
-					<SelectboxOptions>
-						<Option value="Y" sort="0">Ja</Option>
-						<Option value="N" sort="1">Nein</Option>
-					</SelectboxOptions>
-				</Setting>
-				<Setting type="selectbox" initialValue="Y" sort="22" conf="Y">
-					<Name>Kategorien modifizieren?</Name>
-					<Description>Hängt den konfigurierten Text an Kategorienamen, -beschreibungen und -kurzbeschreibungen an.</Description>
-					<ValueName>modify_categories</ValueName>
-					<SelectboxOptions>
-						<Option value="Y" sort="0">Ja</Option>
-						<Option value="N" sort="1">Nein</Option>
-					</SelectboxOptions>
-				</Setting>
-				<Setting type="text" initialValue="Foobar!" sort="23" conf="Y">
-					<Name>Text zum Beispiel-Modifizieren</Name>
-					<Description>Ein Text, der an Produkt- und Kategoriebeschreibungen angehangen wird.</Description>
-					<ValueName>modification_text</ValueName>
-				</Setting>
-                -->
 			</Settingslink>
 		</Adminmenu>
     </Install>
