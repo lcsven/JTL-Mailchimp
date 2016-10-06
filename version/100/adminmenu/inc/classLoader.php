@@ -9,7 +9,12 @@ function classLoader($szClassName)
 {
     global $oPlugin;
 
-    $szClassFile = $oPlugin->cAdminmenuPfad . 'inc/' . $szClassName . '.php';
+    if (($oPlugin instanceof Plugin) && null !== $oPlugin) {
+        $szClassFile = $oPlugin->cAdminmenuPfad . 'inc/' . $szClassName . '.php';
+    } else {
+        $szClassFile = __DIR__ . '/' . $szClassName . '.php';
+    }
+
     if (file_exists($szClassFile)) {
         require_once($szClassFile);
         if (class_exists($szClassName)) {
@@ -18,7 +23,7 @@ function classLoader($szClassName)
         return false;
     }
 }
-$PREPEND         = true;
+$PREPEND         = false;
 $THROW_EXCEPTION = true;
 spl_autoload_register('classLoader', $THROW_EXCEPTION, $PREPEND);
 

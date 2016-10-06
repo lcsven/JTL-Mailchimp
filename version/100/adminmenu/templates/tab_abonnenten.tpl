@@ -26,40 +26,86 @@
     }
 </style>
 
+{literal}
+<script>
+    $(document).ready(function() {
+
+        $('#checkAll').change(function() {
+            $("input:checkbox").prop('checked', $(this).prop("checked"));
+        });
+
+    });
+</script>
+{/literal}
+
 <br>
+<form class="subscribers" method="post" action="">
+{$jtl_token}
 <div id="settings">
-	<table>
+	<table class="table table-condensed table-striped table-hover">
 		 <tbody>
-		 	<tr>
-				  <th class="tleft">Abonnent</th>
-				  <th class="tleft">Kundengruppe</th>
-				  <th class="tleft">E-Mail Adresse</th>
-				  <th class="tcenter">Eingetragen am</th>
-				  <th class="tcenter">Liste</th>
-				  <th class="tcenter">Synchronisiert am</th>
-				  <th class="tcenter">Letzte Synchronisierung</th>
-			 </tr>
-             {if isset($oNewsletterReceiver_arr)}
+            <tr>
+                <th></th>
+                <th class="tleft">Abonnent</th>
+                <th class="tleft">Kundengruppe</th>
+                <th class="tleft">E-Mail Adresse</th>
+                <th class="tcenter">Eingetragen</th>
+                <th class="tcenter">Synchronisiert</th>
+                <th class="tcenter">Liste</th>
+                <th class="tcenter">Aktion</th>
+            </tr>
+            {if isset($oNewsletterReceiver_arr)}
                  {foreach from=$oNewsletterReceiver_arr item="oNewsletterReceiver"}
-                 <tr class="tab_bg1">
-                      <td class="tleft">
-                        {$oNewsletterReceiver->cAnrede} {$oNewsletterReceiver->cVorname} {$oNewsletterReceiver->cNachname}
-                      </td>
-                      <td class="tleft">{$oNewsletterReceiver->cKundengruppe}</td>
-                      <td class="tleft">{$oNewsletterReceiver->cEmail}</td>
-                      <td class="tcenter">{$oNewsletterReceiver->dEingetragen|date_format:"%d.%m.%Y %R"}</td>
-                      {if isset($oNewsletterReceiver->cList) }
-                      <td class="tcenter">{$oNewsletterReceiver->cList}</td>
-                      {/if}
-                      {if isset($oNewsletterReceiver->dSync)}
-                      <td class="tcenter">{$oNewsletterReceiver->dSync|date_format:"%d.%m.%Y %R"}</td>
-                      {/if}
-                      {if isset($oNewsletterReceiver->dLastSync)}
-                      <td class="tcenter">{$oNewsletterReceiver->dLastSync|date_format:"%d.%m.%Y %R"}</td>
-                      {/if}
-                 </tr>
+            <tr class="tab_bg1">
+                <td><input type="checkbox" name="id_{$oNewsletterReceiver->id}" value="{$oNewsletterReceiver->subscriberHash}"></td>
+                <td class="tleft">
+                {$oNewsletterReceiver->cAnrede} {$oNewsletterReceiver->cVorname} {$oNewsletterReceiver->cNachname}
+                </td>
+                <td class="tleft">{$oNewsletterReceiver->cKundengruppe}</td>
+                <td class="tleft">{$oNewsletterReceiver->cEmail}</td>
+                <td class="tcenter">{$oNewsletterReceiver->dEingetragen|date_format:"%d.%m.%Y %R"}</td>
+                <td class="tcenter">
+                {if isset($oNewsletterReceiver->dLastSync)}
+                    {$oNewsletterReceiver->dLastSync|date_format:"%d.%m.%Y %R"}
+                {/if}
+                </td>
+                <td class="tcenter">
+                {if isset($oNewsletterReceiver->cList) }
+                    {$oNewsletterReceiver->cList}
+                {/if}
+                Newletter TESTshop
+                </td>
+
+                <td class="tcenter">
+                    <button class="btn btn-danger btn-xs" type="submit" title="von Liste l&ouml;schen">
+                        <i class="fa fa-remove"></i>
+                    </button>
+                    {*<button class="btn btn-success btn-xs" disabled="disabled" title="mit Liste synchronisieren">*}
+                        {*<i class="fa fa-share-square-o"></i>*}
+                    {*</button>*}
+                </td>
+
+            </tr>
                  {/foreach}
-             {/if}
+            {/if}
 		</tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                    <input type="checkbox" id="checkAll"></input>
+                </td>
+            </tr>
+        </tfoot>
 	</table>
+    <button class="btn btn-danger" name="sync" value="sync_part" onclick="document.subscribers.submit">
+        <i class="fa fa-share-square-o"></i> Gew&auml;hlte synchronisieren
+    </button>
+    <button class="btn btn-warning" name="sync" value="sync_all">
+        <i class="fa fa-share-square-o"></i> Alle synchronisieren
+    </button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-success" name="reload" value="reload"  onclick="document.reload">
+        <i class="fa fa-refresh"></i> Neu einlesen
+    </button>
 </div>
+</form>

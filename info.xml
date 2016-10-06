@@ -26,10 +26,10 @@
 				<Name>Abonnenten</Name>
 				<Filename>tab_abonnenten.php</Filename>
 			</Customlink>
-            <Customlink sort="3">
-                <Name>Initialisierung</Name>
-				<Filename>tab_initialize.php</Filename>
-            </Customlink>
+            <!--<Customlink sort="3">-->
+                <!--<Name>Initialisierung</Name>-->
+				<!--<Filename>tab_initialize.php</Filename>-->
+            <!--</Customlink>-->
 			<Settingslink sort="2">
 				<Setting type="text" initialValue="" sort="0" conf="N">
 					<Name>Allgemein</Name>
@@ -42,6 +42,17 @@
 					<Description>Den API-Key finden Sie in Ihrem MailChimp-Account unter 'Account->Extras->API-Key'</Description>
 					<ValueName>jtl_mailchimp3_api_key</ValueName>
 				</Setting>
+                <Setting type="selectbox" initialValue="" sort="2" conf="Y">
+                    <Name>MailChimp Liste</Name>
+                    <Description>Wählen Sie eine MailChimp-Liste, mit der Ihre Newsletter-Abonnenten synchronisiert werden.</Description>
+                    <ValueName>jtl_mailchimp3_list</ValueName>
+                    <OptionsSource>
+                        <File>tab_settings_lists.php</File>
+                    </OptionsSource>
+                    <SelectboxOptions>
+                        <Option value="0" sort="1">Noch keine Listen verfügbar</Option>
+                    </SelectboxOptions>
+                </Setting>"
 			</Settingslink>
 		</Adminmenu>
     </Install>
