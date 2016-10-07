@@ -66,14 +66,23 @@
 
 class MailChimpLists
 {
-    public $oRestClient   = null;
-    private $szListId     = '';
-    private $vListMembers = array();
+    public $oRestClient       = null;
+    public $hashIndex         = array(); // --TODO-- alter name; mayba add something like hashIndexMembers
+    public $listNames         = array();
+    private $oResponseLists   = null;
+    private $vListMembers     = array();
+    private static $oInstance = null; // singleton pattern "self instance"-holder
 
     private $oLogger = null; // --DEBUG--
 
 
-    public function __construct(RestClient $oClient)
+    /**
+     * construct this object
+     *
+     * @param object  RestClient-object
+     * @return void
+     */
+    private function __construct(RestClient $oClient)
     {
         // --DEBUG--
         Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
@@ -85,6 +94,20 @@ class MailChimpLists
     }
 
     /**
+     * singleton pattern instance-deliverer
+     *
+     * @param object  RestClient-object
+     * @return object  MailChimpLists-object (single instance)
+     */
+    public static function getInstance(RestClient $oClient)
+    {
+        if (null === self::$oInstance) {
+            self::$oInstance = new self($oClient);
+        }
+        return self::$oInstance;
+    }
+
+    /**
      * fetch all list from MailChimp account
      *
      * @param void
@@ -92,20 +115,24 @@ class MailChimpLists
      */
     public function getAllLists()
     {
-        $oResponse = json_decode($this->oRestClient->retrieve('/lists'));
-
-        $this->oLogger->debug('count of lists: '.$oResponse->total_items); // --DEBUG--
-        /* {{{
-        for ($i = 0; $i < $oResponse->total_items; $i++) {
-            $this->oLogger->debug('list id: "'.$oResponse->lists[$i]->id.'", name: "'.$oResponse->lists[$i]->name.'"'); // --DEBUG--
-            $this->szListId = $oResponse->lists[$i]->id;
+        // prevent double-calls of the Plugin-class (because tab_settings)
+        if (null === $this->oResponseLists) {
+            $oResponse = json_decode($this->oRestClient->retrieve('/lists'));
+            $this->oResponseLists = $oResponse;
+        } else {
+            $oResponse = $this->oResponseLists;
         }
-        }}} */
+
+        // store the list-names(!) in a hash for later usage
+        foreach ($oResponse->lists as $arrayPos => $oList) {
+            $this->listNames[$oList->id] = $oList->name;
+        }
+
         return $oResponse->lists;
     }
 
     /**
-     * fetch all subscribers of a given List
+     * fetch all subscribers of a given List from remote
      *
      * @param string  list-id of a MailChimp-list
      * @return array  array of objects of (MailChimp-)subscribers
@@ -113,60 +140,77 @@ class MailChimpLists
     public function getAllMembers($szListId)
     {
         $oResponse = json_decode($this->oRestClient->retrieve('/lists/'.$szListId.'/members'));
-
         $this->vListMembers = $oResponse->members; // store the list to spare transfer of data
+        $this->buildHashIndex(); // build a hash-index of that list
         return $this->vListMembers;
     }
 
+    /**
+     * build a local index of all subscribers, to find them quickly in our fetched list
+     * (store that hash-index locally)
+     *
+     * @param void
+     * @return void
+     */
+    private function buildHashIndex()
+    {
+        foreach ($this->vListMembers as $arrayPos => $oListMember) {
+            $this->hashIndex[$oListMember->id] = $arrayPos;
+        }
+        //$this->oLogger->debug('local hash-index: '.print_r($this->hashIndex ,true)); // --DEBUG--
+    }
+
+    /**
+     * locally find a subscriber in the fetched list
+     *
+     * @param string  MailChimp-SubscriberHash
+     * @return object  Subscriber-object
+     */
+    public function findMemberBySubscriberHash($szSubscriberHash)
+    {
+        //$this->oLogger->debug('member at position: '.$this->hashIndex[$szSubscriberHash]); // --DEBUG--
+        return $this->vListMembers[$this->hashIndex[$szSubscriberHash]];
+    }
+
+    /**
+     * find a subscriber as list-member at remote
+     *
+     * @param string  Mailchimp-list-ID
+     * @param string  MailChimp-SubscriberHash
+     * @return object  single MailChimp subscriber-object
+     */
     public function getMemberBySubscriberHash($szListId, $szSubscriberHash)
     {
-        // --TODO-- return direkt, without var ...
-        $oMember = json_decode($this->oRestClient->retrieve('/lists/'.$szListId.'/members/'.$szSubscriberHash));
-        //$this->oLogger->debug('MEMBER: '.print_r($oMember ,true)); // --DEBUG--
-        return $oMember;
+        return json_decode($this->oRestClient->retrieve('/lists/'.$szListId.'/members/'.$szSubscriberHash));
     }
 
-    /** maybe --OBSOLETE--  ..but a search in the list can be helpful .. */
-    public function findMemberByEmail($szEmail)
+    public function createMember($szListId, MailChimpSubscriber $oSubscriber)
     {
-        $szSubscriberHash = $this->calcSubscriberHash($szEmail);
-        // --TODO-- find the SubscriberHash of a spcific member ... (for update and deletion)
-        while (true) {
-        }
-        //return $szSubscriberHash;
-    }
-
-    public function createMember($szListId)
-    {
-        $oMember = new MailChimpSubscriber();
-        $oMember->set('email_address', 'danny.raufeisen@jtl-software.com')
-                ->set('list_id', 'feccd07475')
-                ->set('status', 'subscribed')
-                ->set('merge_fields', array('FNAME' => 'Danny', 'LNAME' => 'Raufeisen'));
-
-        //$this->oLogger->debug('JSON: '.print_r($oMember,true)); // --DEBUG--
-        //$this->oLogger->debug('JSON: '.json_encode($oMember)); // --DEBUG--
-
-        $oResponse = $this->oRestClient->create('/lists/'.$szListId.'/members', json_encode($oMember));
+        $oResponse = $this->oRestClient->create('/lists/'.$szListId.'/members', json_encode($oSubscriber));
         $this->oLogger->debug('response (create): '.print_r(json_decode($oResponse),true)); // --DEBUG--
+        // --TODO-- error-handling
     }
 
     public function createMembersBulk($vSubscribers)
     {
-        // --TODO-- create members a´ mass ...
+        // create members a´ mass ...
         // loop $vSubscribers
-        //    $this->createMember()
+        //    $this->createMember()  .... NO! ONE api-call is possible! (with up to 500 members-subscriptions)
         // /loop
+
+        // --TODO-- we need the subscriptions as a object-list with only email and status
+        // we have to do that in chunks of 500 subscribers
+        $oResponse = $this->oRestClient->create('/lists/'.$szListId, json_encode($vSubscribers));
     }
 
     public function deleteMember($szListId, $szSubscriberHash)
     {
-        $szSubscriberHash = 'a04edc8221043dd5b0411c5243193a3b'; // --DEBUG--
-
         $oResponse = $this->oRestClient->destroy('/lists/'.$szListId.'/members/'.$szSubscriberHash);
         $this->oLogger->debug('response (delete): '.print_r(json_decode($oResponse),true)); // --DEBUG--
+        // --TODO-- error-handling
     }
 
+    /** maybe --OBSOLETE-- ... */
     public function updateMember($szListId, $szSubscriberHash)
     {
         $szSubscriberHash = '2c1f20509ea87adc76dc50c773c15a2f'; // --DEBUG--

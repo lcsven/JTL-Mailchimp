@@ -70,19 +70,21 @@
                 {/if}
                 </td>
                 <td class="tcenter">
-                {if isset($oNewsletterReceiver->cList) }
-                    {$oNewsletterReceiver->cList}
+                {if isset($cList) && $oNewsletterReceiver->remote}
+                    {$cList}
                 {/if}
-                Newletter TESTshop
                 </td>
 
                 <td class="tcenter">
-                    <button class="btn btn-danger btn-xs" type="submit" title="von Liste l&ouml;schen">
+                {if isset($oNewsletterReceiver->remote) && $oNewsletterReceiver->remote === true}
+                    <button class="btn btn-danger btn-xs" type="submit" title="von Liste l&ouml;schen" name="remove" value="{$oNewsletterReceiver->subscriberHash}">
                         <i class="fa fa-remove"></i>
                     </button>
-                    {*<button class="btn btn-success btn-xs" disabled="disabled" title="mit Liste synchronisieren">*}
-                        {*<i class="fa fa-share-square-o"></i>*}
-                    {*</button>*}
+                {else}
+                    <button class="btn btn-success btn-xs" title="mit Liste synchronisieren" name="add" value="{$oNewsletterReceiver->subscriberHash}">
+                        <i class="fa fa-share-square-o"></i>
+                    </button>
+                {/if}
                 </td>
 
             </tr>
@@ -97,11 +99,11 @@
             </tr>
         </tfoot>
 	</table>
-    <button class="btn btn-danger" name="sync" value="sync_part" onclick="document.subscribers.submit">
-        <i class="fa fa-share-square-o"></i> Gew&auml;hlte synchronisieren
+    <button class="btn btn-warning" name="sync" value="sync_part" onclick="document.subscribers.submit">
+        <i class="fa fa-share-square-o"></i> Gew&auml;hlte &uuml;bertragen
     </button>
-    <button class="btn btn-warning" name="sync" value="sync_all">
-        <i class="fa fa-share-square-o"></i> Alle synchronisieren
+    <button class="btn btn-danger" name="sync" value="sync_all">
+        <i class="fa fa-share-square-o"></i> Alle &uuml;bertragen
     </button>
     &nbsp;&nbsp;&nbsp;
     <button class="btn btn-success" name="reload" value="reload"  onclick="document.reload">

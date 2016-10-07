@@ -37,6 +37,7 @@ require_once($this->cAdminmenuPfad . 'inc/classLoader.php'); // "$this"  because
     ? $szApiKey = $this->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key']
     : $szApiKey = '';
 
+
 $oLogger->debug('API-key: '.$szApiKey); // --DEBUG--
 if ('' !== $szApiKey) {
     $option        = new stdClass();
@@ -45,13 +46,10 @@ if ('' !== $szApiKey) {
     $option->nSort = 0;
     $options[]     = $option;
 
-    if (!isset($oLists) || (null === $oLists)) { // --TO-CHECK-- --TODO-- seems to be executed twice! not nice! --TODO-- !!
-        $oLists = new MailChimpLists(new RestClient($szApiKey));
+    if (!isset($oLists) || (null === $oLists)) { // --TO-CHECK-- --TODO-- seems to be executed twice! not nice!!!
+        $oLists = MailChimpLists::getInstance(new RestClient($szApiKey));
 
-        //$vLists = array(); // --DEBUG--
         $vLists = $oLists->getAllLists();
-        //$oLogger->debug('all lists: '.print_r($vLists,true)); // --DEBUG--
-        //$oLogger->debug('len: '.count($vLists)); // --DEBUG--
 
         for ($i = 0; $i < count($vLists); $i++) {
             //$oLogger->debug('see list: '.$vLists[$i]->id); // --DEBUG--
