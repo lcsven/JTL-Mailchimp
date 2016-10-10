@@ -29,7 +29,8 @@ defined('TABLE_SYNC') ? : define('TABLE_SYNC', 'xplugin_jtl_mailchimp3_sync'); /
 $oDbLayer = Shop::DB();
 $cQuery   = ' SELECT'
         . '   kNewsletterEmpfaenger AS id'
-        . ' , IF(nle.cAnrede = "m", "Herr", "Frau") as cAnrede'
+        //. ' , IF(nle.cAnrede = "m", "Herr", "Frau") as cAnrede'
+        . ' , IF(nle.cAnrede = "w", "female", "male") as cGender'
         . ' , nle.cVorname'
         . ' , nle.cNachname'
         . ' , nle.cEmail'
@@ -41,9 +42,12 @@ $cQuery   = ' SELECT'
         . ' LEFT JOIN tkunde ON tkunde.kKunde = nle.kKunde'
         . ' LEFT JOIN tkundengruppe ON tkunde.kKundengruppe = tkundengruppe.kKundengruppe'
 ;
-
+// fetch all NL-receiver from the local shop-DB
 $oNewsletterReceiver_arr = $oDbLayer->query($cQuery, 2);
-//$oLogger->debug('oNewsletterReceiver_arr SQL: '.print_r($oNewsletterReceiver_arr ,true)); // --DEBUG--
+//build a  receiver index-hash
+foreach ($oNewsletterReceiver_arr as $key => $oVal) {
+    $oReceiverIndexHash_arr[$oVal->subscriberHash] = $key;
+}
 
 
 $szApiKey = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key'];
@@ -71,17 +75,36 @@ if ('' !== $szApiKey && '' !== $szListId) {
                     ->set('status'        ,  'subscribed')
                     ->set('merge_fields'  ,  array(
                                       'FNAME' => current($oNewsletterReceiver_arr)->cVorname
-                                    , 'LNAME' => current($oNewsletterReceiver_arr)->cNachname)
+                                    , 'LNAME' => current($oNewsletterReceiver_arr)->cNachname
+                                    , 'GENDER' => current($oNewsletterReceiver_arr)->cGender // --TODO-- maybe documenting
+                                    )
                     );
 
             //$oLogger->debug('CREATE REMOTE : '.print_r($oMember ,true)); // --DEBUG--
             $oLists->createMember($szListId, $oMember);
-
             break;
+
         case(isset($_POST['remove'])) :
             // remove a "clicked" subscriber from the current list
             $oLogger->debug('remove from remote '.$_POST['remove']); // --DEBUG--
             $oLists->deleteMember($szListId, $_POST['remove']);
+            break;
+
+        case(isset($_POST['sync']) && 'sync_part' === $_POST['sync']) :
+            // transfer a chunk of members to remote
+            foreach ($_POST as $key => $val) {
+                $oLogger->debug('key: '.$key.'   val: '.$val); // --DEBUG--
+                if (preg_match('/^id_/', $key)) {
+                    $oSubscribers_arr[] = $oNewsletterReceiver_arr[$oReceiverIndexHash_arr[$val]];
+                }
+            }
+            $oLogger->debug('choooosen ... : '.print_r($oSubscribers_arr ,true)); // --DEBUG--
+            $oLists->createMembersBulk($szListId, $oSubscribers_arr);
+            break;
+        case(isset($_POST['sync']) && 'sync_all' === $_POST['sync']) :
+            // transfer ALL members to remote
+            $oLists->createMembersBulk($szListId, $oNewsletterReceiver_arr);
+            break;
     }
 
     //$oLists->getAllLists();
@@ -96,31 +119,44 @@ if ('' !== $szApiKey && '' !== $szListId) {
     //$oLists->updateMember($szListId);
 
 
-    // read all members and theyr subscriber-state from MailChimp and show the results
-    $oMembers_arr = $oLists->getAllMembers($szListId);
+    // read all members and their subscriber-state from MailChimp and show the results
+    $oMembers_arr = $oLists->getAllMembers($szListId, count($oNewsletterReceiver_arr));
+    $oLogger->debug('read members count: '.count($oMembers_arr)); // --DEBUG--
 
     for ($i = 0; $i < count($oNewsletterReceiver_arr); $i++) {
-        // insert and update fields in our nl-receiver-array (e.g. remote states)
-        if (array_key_exists($oNewsletterReceiver_arr[$i]->subscriberHash, $oLists->hashIndex)) {
+        // insert(!) and update fields in our nl-receiver-array (e.g. remote states)
+        if (array_key_exists($oNewsletterReceiver_arr[$i]->subscriberHash, $oLists->vMembersIndexHash)) {
+
+            file_put_contents(
+                  '__temp.txt'
+                , $oNewsletterReceiver_arr[$i]->subscriberHash
+                    .' -> '
+                    .$oLists->vMembersIndexHash[$oNewsletterReceiver_arr[$i]->subscriberHash]
+                    ."\n"
+                , FILE_APPEND
+            ); // --DEBUG--
+
             $oMember = $oLists->findMemberBySubscriberHash($oNewsletterReceiver_arr[$i]->subscriberHash);
 
             $oNewsletterReceiver_arr[$i]->dLastSync = $oMember->last_changed;
             $oNewsletterReceiver_arr[$i]->remote    = true;
         } else {
-            $oNewsletterReceiver_arr[$i]->remote = false;
+            $oNewsletterReceiver_arr[$i]->remote    = false;
         }
     }
     //$oLogger->debug('oNewsletterReceiver_arr "fields inserted": '.print_r($oNewsletterReceiver_arr ,true)); // --DEBUG--
+
+    $smarty->assign('cList', $oLists->listNames[$szListId]); // CONSIDER: "getAllLists()" has to be called previously (as happend in tab_settings)
 }
 
-
-$smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr)
-       ->assign('cList', $oLists->listNames[$szListId]) // CONSIDER: "getAllLists()" has to be called previously (as happend in tab_settings)
-;
+$smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr);
 $smarty->display($oPlugin->cAdminmenuPfad . 'templates/tab_abonnenten.tpl');
 
 
-// {{{ old SQL - with TABLE_SYNC
+// --TODO-- settings: shop-hook ... for insert automatically or manual
+
+
+/* {{{ old SQL - with TABLE_SYNC
 $cQuery = ' SELECT'
         . '   kNewsletterEmpfaenger AS id'
         . ' , IF(nle.cAnrede = "m", "Herr", "Frau") as cAnrede'
@@ -136,7 +172,7 @@ $cQuery = ' SELECT'
         . ' LEFT JOIN tkunde ON tkunde.kKunde = nle.kKunde'
         . ' LEFT JOIN tkundengruppe ON tkunde.kKundengruppe = tkundengruppe.kKundengruppe'
 ;
-// }}}
+}}} */
 
 /* {{{
 global $oPlugin;

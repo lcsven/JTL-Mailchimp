@@ -38,7 +38,6 @@ require_once($this->cAdminmenuPfad . 'inc/classLoader.php'); // "$this"  because
     : $szApiKey = '';
 
 
-$oLogger->debug('API-key: '.$szApiKey); // --DEBUG--
 if ('' !== $szApiKey) {
     $option        = new stdClass();
     $option->cWert = '';
@@ -46,13 +45,12 @@ if ('' !== $szApiKey) {
     $option->nSort = 0;
     $options[]     = $option;
 
-    if (!isset($oLists) || (null === $oLists)) { // --TO-CHECK-- --TODO-- seems to be executed twice! not nice!!!
+    if (!isset($oLists) || (null === $oLists)) {
         $oLists = MailChimpLists::getInstance(new RestClient($szApiKey));
 
         $vLists = $oLists->getAllLists();
 
         for ($i = 0; $i < count($vLists); $i++) {
-            //$oLogger->debug('see list: '.$vLists[$i]->id); // --DEBUG--
             $option        = new stdClass();
             $option->cWert = $vLists[$i]->id;
             $option->cName = $vLists[$i]->name . ' (' . $vLists[$i]->id . ')';

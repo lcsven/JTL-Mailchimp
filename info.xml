@@ -52,7 +52,12 @@
                     <SelectboxOptions>
                         <Option value="0" sort="1">Noch keine Listen verfügbar</Option>
                     </SelectboxOptions>
-                </Setting>"
+                </Setting>
+                <Setting type="checkbox" initialValue="1" sort="3" conf="Y">
+                    <Name>automatisch Eintragen</Name>
+                    <Description>Sobald sich ein Kunden für den shop-Newsletter anmeldet, wird er automatisch zu MailChimp übertragen</Description>
+                    <ValueName>jtl_mailchimp3_autosync</ValueName>
+                </Setting>
 			</Settingslink>
 		</Adminmenu>
     </Install>
