@@ -33,11 +33,27 @@
 </script>
 {/literal}
 
-<br>
 <div class="panel panel-default">
     <form class="subscribers" method="post" action="">
     {$jtl_token}
     <div id="settings">
+
+        {* search *}
+        <div class="input-group">
+            <span class="input-group-addon">
+                <label for="ccSearchString">e-Mail Suche:</label>
+            </span>
+            <input class="form-control" name="cSearchString" type="text" value="{if isset($cSearchString) && $cSearchString|strlen > 0}{$cSearchString}{/if}" />
+            <span class="input-group-btn">
+                <button name="search" type="submit" class="btn btn-primary" value="email_search">
+                    <i class="fa fa-search"></i> Suchen
+                </button>
+            </span>
+        </div>
+
+        {* pagination *}
+        {include file='tpl_inc/pagination.tpl' oPagination=$oPagiInaktiveAbos cAnchor='inaktiveabonnenten' cParam_arr=['kPlugin'=>$oPlugin->kPlugin]}
+
         {*<table class="table table-condensed table-striped table-hover">*}
         {*<table class="table table-condensed table-hover">*}
         <table class="table table-hover">
@@ -50,7 +66,7 @@
                     <th class="tcenter">Eingetragen</th>
                     <th class="tcenter">Synchronisiert</th>
                     <th class="tcenter">Liste</th>
-                    <th class="tcenter">Aktion</th>
+                    <th class="tcenter">Aktionen</th>
                 </tr>
                 {if isset($oNewsletterReceiver_arr)}
                      {foreach from=$oNewsletterReceiver_arr item="oNewsletterReceiver"}

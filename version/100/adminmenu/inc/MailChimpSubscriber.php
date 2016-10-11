@@ -11,7 +11,7 @@ class MailChimpSubscriber
     /** fields marked with *** are mantatory for "create" */
 
     /** The MD5 hash of the lowercase version of the list member’s email address. */
-    //public $id               = ''; //   e.g. "f4fbadbe2a123b82998b6af06ba93095"
+    //public $id               = ''; //   e.g. "f4fbadbe2a123b82998b6af06ba93095" // --TODO-- check, who is responsive for that
 
     /** Email address for a subscriber. */
     public $email_address    = ''; // ***

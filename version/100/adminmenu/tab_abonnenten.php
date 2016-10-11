@@ -24,7 +24,8 @@ defined('TABLE_SYNC') ? : define('TABLE_SYNC', 'xplugin_jtl_mailchimp3_sync'); /
 // get all shop-nl-receiver
 // check, who is at mcand who is not
 
-//$oLogger->debug('Pagi...'.print_r(new Pagination ,true)); // --DEBUG--
+//$oLogger->debug(''.print_r( $oPlugin ,true)); // --DEBUG--
+
 
 $oDbLayer = Shop::DB();
 $cQuery   = ' SELECT'
@@ -42,13 +43,21 @@ $cQuery   = ' SELECT'
         . ' LEFT JOIN tkunde ON tkunde.kKunde = nle.kKunde'
         . ' LEFT JOIN tkundengruppe ON tkunde.kKundengruppe = tkundengruppe.kKundengruppe'
 ;
+// if we're in search-mode, we extend our SQL by a WHERE-clause
+if (isset($_POST['search']) && '' !== $_POST['cSearchString']) {
+    $cQuery .= ' WHERE'
+        . ' nle.cEmail like "%' . $_POST['cSearchString'] . '%"'
+    ;
+    // --TODO-- that is not really nice! in the future, we should "bind" paramters to a prep-query!
+}
+
+
 // fetch all NL-receiver from the local shop-DB
 $oNewsletterReceiver_arr = $oDbLayer->query($cQuery, 2);
 //build a  receiver index-hash
 foreach ($oNewsletterReceiver_arr as $key => $oVal) {
     $oReceiverIndexHash_arr[$oVal->subscriberHash] = $key;
 }
-
 
 $szApiKey = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key'];
 $szListId = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_list'];
@@ -79,27 +88,23 @@ if ('' !== $szApiKey && '' !== $szListId) {
                                     , 'GENDER' => current($oNewsletterReceiver_arr)->cGender // --TODO-- maybe documenting
                                     )
                     );
-
-            //$oLogger->debug('CREATE REMOTE : '.print_r($oMember ,true)); // --DEBUG--
             $oLists->createMember($szListId, $oMember);
             break;
 
         case(isset($_POST['remove'])) :
             // remove a "clicked" subscriber from the current list
-            $oLogger->debug('remove from remote '.$_POST['remove']); // --DEBUG--
             $oLists->deleteMember($szListId, $_POST['remove']);
             break;
 
         case(isset($_POST['sync']) && 'sync_part' === $_POST['sync']) :
-            // transfer a chunk of members to remote
+            // transfer the selected members to remote
             foreach ($_POST as $key => $val) {
-                $oLogger->debug('key: '.$key.'   val: '.$val); // --DEBUG--
                 if (preg_match('/^id_/', $key)) {
-                    $oSubscribers_arr[] = $oNewsletterReceiver_arr[$oReceiverIndexHash_arr[$val]];
+                    $oNewsletterReceiverSelected_arr[] = $oNewsletterReceiver_arr[$oReceiverIndexHash_arr[$val]];
                 }
             }
-            $oLogger->debug('choooosen ... : '.print_r($oSubscribers_arr ,true)); // --DEBUG--
-            $oLists->createMembersBulk($szListId, $oSubscribers_arr);
+            $oLogger->debug('choooosen ... : '.print_r($oNewsletterReceiverSelected_arr ,true)); // --DEBUG--
+            $oLists->createMembersBulk($szListId, $oNewsletterReceiverSelected_arr);
             break;
         case(isset($_POST['sync']) && 'sync_all' === $_POST['sync']) :
             // transfer ALL members to remote
@@ -119,8 +124,8 @@ if ('' !== $szApiKey && '' !== $szListId) {
     //$oLists->updateMember($szListId);
 
 
-    // read all members and their subscriber-state from MailChimp and show the results
-    $oMembers_arr = $oLists->getAllMembers($szListId, count($oNewsletterReceiver_arr));
+    // read all members and their subscriber-state from MailChimp and show the results --TODO-- offset! pagination!
+    $oMembers_arr = $oLists->getAllMembers($szListId, 0, count($oNewsletterReceiver_arr));
     $oLogger->debug('read members count: '.count($oMembers_arr)); // --DEBUG--
 
     for ($i = 0; $i < count($oNewsletterReceiver_arr); $i++) {
@@ -149,7 +154,21 @@ if ('' !== $szApiKey && '' !== $szListId) {
     $smarty->assign('cList', $oLists->listNames[$szListId]); // CONSIDER: "getAllLists()" has to be called previously (as happend in tab_settings)
 }
 
-$smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr);
+// pagination
+$oPagiInaktiveAbos = (new Pagination('locallist')) // --TODO-- adopt the oName!
+    ->setItemArray($oNewsletterReceiver_arr)
+    ->assemble();
+$oNewsletterReceiver_arr = $oPagiInaktiveAbos->getPageItems();
+// pagination END
+
+
+// re-fill the search-field (--OPTIONAL--)
+if (isset($_POST['search']) && '' !== $_POST['cSearchString']) {
+    $smarty->assign('cSearchString', $_POST['cSearchString']);
+}
+$smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr)
+       ->assign('oPagiInaktiveAbos', $oPagiInaktiveAbos) // pagination
+;
 $smarty->display($oPlugin->cAdminmenuPfad . 'templates/tab_abonnenten.tpl');
 
 
