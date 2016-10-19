@@ -1,20 +1,20 @@
 <?php
-
 /**
  * DOA for the MailChimp-wrapper
  * represents a "Subscriber" as mentioned here:
  *     http://developer.mailchimp.com/documentation/mailchimp/reference/overview/
  *     http://developer.mailchimp.com/documentation/mailchimp/reference/lists/members/#
  */
+
 class MailChimpSubscriberBulk
 {
-    /** fields marked with *** are mantatory for "create" */
+    /** fields marked with (*** are mantatory for "create" (names are given by MailChimp!) */
 
-    /** array of subscriber-objects  */
-    public $members         = array(); // ***
+    /** array of subscriber-objects  (*** */
+    public $members         = array();
 
-    /** update existing list-members (true) or do not update (false) */
-    public $update_existing = true; // ***
+    /** "update"[true] existing list-members or "not-update"[false] (*** */
+    public $update_existing = false; // --NOTE-- 'update' did not work correcly by MailChimp (maybe a bug)
 
 
     /**

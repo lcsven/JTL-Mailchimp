@@ -1,5 +1,17 @@
 <?php
-/* MailChimp Main-End-Point "Campaigns"
+/**
+ * MailChimp3 plugin - Compains-object
+ * not yet implemented
+ *
+ * @package     jtl_mailchimp3_plugin
+ * @author      JTL-Software-GmbH
+ * @copyright   2016 JTL-Software-GmbH
+ *
+ *
+ * MailChimp Main-End-Point "Compains"
+ * (http://developer.mailchimp.com/documentation/mailchimp/reference/overview/)
+ *
+ * Sub-EndPoints:
  *
  *  POST   	 /campaigns                                      	 Create a new campaign
  *  GET    	 /campaigns                                      	 Get all campaigns
@@ -33,6 +45,5 @@ class MailChimpLists
     {
         $this->RestClient = $oClient;
     }
-
 
 }

@@ -1,43 +1,30 @@
 <?php
 /**
- * HOOK_SMARTY_OUTPUTFILTER
- * Used to insert scripts and styles into the DOM for old shop versions
- * and debug a little example stuff on article pages
+ * HOOK_NEWSLETTER_PAGE_EMPFAENGERLOESCHEN (ID 38)
+ * Used to delete a newsletter-receiver from a MailChimp-list
  *
  * @package     jtl_example_plugin
- * @author      Felix Moche <felix.moche@jtl-software.com
+ * @author      JTL-Software-GmbH
  * @copyright   2015 JTL-Software-GmbH
+ */
 
-require_once $oPlugin->cFrontendPfad . 'inc/class.jtl_example.helper.php';
+if (isset($args_arr['oNewsletterEmpfaenger']) && is_object($args_arr['oNewsletterEmpfaenger'])) {
+    $oNewsletterEmpfaenger = $args_arr['oNewsletterEmpfaenger'];
 
-$helper = jtlExampleHelper::getInstance($oPlugin);
-$helper->fallBack()//add scripts/css for older shop versions
-       ->insertStuff(); //example function for inserting stuff into the DOM
+    $fAutoSync = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_autosync']; // 'on' | ''
+    if ('on' === $fAutoSync) {
+        $szApiKey = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key'];
+        $szListId = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_list'];
 
-//Shop4 does not use the global $nSeitenTyp - check shop class
-if (jtlExampleHelper::isModern()) {
-    $nSeitenTyp = Shop::$pageType;
-} else {
-    global $nSeitenTyp;
-}
-if ($nSeitenTyp === PAGE_ARTIKEL) {
-    //we have an article detail page
-    $fooBar = $helper->getSomeThingFromDB2(); //just get some data from the database
-    if ($oPlugin->oPluginEinstellungAssoc_arr['jtl_example_debug'] === 'Y') {
-        foreach ($fooBar as $foo) {
-            Shop::dbg($foo, false, 'Got foobar from DB:'); //quick&dirty debugging
+        $oLists = MailChimpLists::getInstance(new RestClient($szApiKey));
+
+        // delete a list-member from MailChimp
+        try {
+            $oResponse = json_decode($oLists->deleteMember($szListId, $oLists->calcSubscriberHash($oNewsletterEmpfaenger->cEmail)));
+        } catch (ExceptionMailChimp $eMC) {
+            // only log that error to not bother the end-user with MailChimp-errors!
+           Jtllog::writeLog('MailChimp3: ' . $eMC->getMessage(), JTLLOG_LEVEL_ERROR, false, "kPlugin", $oPlugin->kPlugin);
         }
     }
-    //do something
-} elseif ($nSeitenTyp === PAGE_SITEMAP) {
-    //we have a sitemap page - do something else - like randomly inserting stuff into the database
-    $helper->insertSomeThingIntoDB(rand(0, 100));
 }
-*/
-
-
-Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
-$oLogger = Logger::getLogger('default');
-
-$oLogger->debug('HOOK 38 triggered!');
 

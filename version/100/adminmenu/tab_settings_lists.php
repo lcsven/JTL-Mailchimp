@@ -7,36 +7,12 @@
  * @copyright   2016 JTL-Software-GmbH
  */
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --DEBUG--
-Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
-$oLogger = Logger::getLogger('default');
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --DEBUG--
-
-//require_once($oPlugin->cAdminmenuPfad . 'inc/classLoader.php');
-//require_once(__DIR__.'/inc/classLoader.php');
-
-//global $oPlugin;
-//$oLogger->debug('global PLUGIN: '.print_r($oPlugin,true)); // --DEBUG--
-//$oLogger->debug('instance: '.(($oPlugin instanceof Plugin) ? 'yes' : 'no')); // --DEBUG--
-//$oLogger->debug(' ... : '.var_dump($oPlugin->oPluginEinstellungAssoc_arr)); // --DEBUG--
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+require_once($this->cAdminmenuPfad . 'inc/classLoader.php'); // "$this"  because we are in object-context of "Plugin"
 $options = array();
 
-//$option->cWert = 123;
-//$option->cName = 'Wert Eins';
-//$option->nSort = 1;
-//$options[]     = $option;
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//require_once($oPlugin->cAdminmenuPfad . 'inc/classLoader.php');
-require_once($this->cAdminmenuPfad . 'inc/classLoader.php'); // "$this"  because we are in object-context of "Plugin"
-
-//if (property_exists($this, 'oPluginEinstellungAssoc_arr')) {
 (isset($this->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key']))
     ? $szApiKey = $this->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key']
     : $szApiKey = '';
-
 
 if ('' !== $szApiKey) {
     $option        = new stdClass();

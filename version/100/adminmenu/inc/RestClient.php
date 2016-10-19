@@ -1,4 +1,11 @@
 <?php
+/**
+ * MailChimp3 plugin - REST-Client
+ *
+ * @package     jtl_mailchimp3_plugin
+ * @author      JTL-Software-GmbH
+ * @copyright   2016 JTL-Software-GmbH
+ */
 
 class RestClient
 {
@@ -6,7 +13,9 @@ class RestClient
     private $apiKey  = '';
     private $oCurl   = null;
 
-    public $oLogger  = null; // --DEBUG--
+    private $fDebug  = true; // --DEBUG--
+    //public $oLogger  = null; // --DEBUG--
+    //public $method   = ''; // --DEBUG--
 
 
     /**
@@ -15,8 +24,8 @@ class RestClient
     public function __construct($apiKey)
     {
         // --DEBUG--
-        Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
-        $this->oLogger = Logger::getLogger('default');
+        //Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
+        //$this->oLogger = Logger::getLogger('default');
         // --DEBUG--
 
 
@@ -41,8 +50,8 @@ class RestClient
         curl_setopt($this->oCurl, CURLOPT_POST, true);
         curl_setopt($this->oCurl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($this->oCurl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->oCurl, CURLOPT_CONNECTTIMEOUT, 30);          // --TO-CHECK--
-        curl_setopt($this->oCurl, CURLOPT_TIMEOUT, 30);   // --TO-CHECK--
+        curl_setopt($this->oCurl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($this->oCurl, CURLOPT_TIMEOUT, 30);
         curl_setopt($this->oCurl, CURLOPT_SSL_VERIFYPEER, false); // added by convention of API v3.0
         //
         //curl_setopt($this->oCurl, CURLOPT_VERBOSE, $this->debug); // --OPTIONAL--
@@ -58,6 +67,7 @@ class RestClient
      */
     public function create($szEndpoint, $vGetParams = array(), $vParameters = array())
     {
+        $this->method = 'POST'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'POST');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -72,6 +82,7 @@ class RestClient
      */
     public function retrieve($szEndpoint, $vGetParams = array(),  $vParameters = array())
     {
+        $this->method = 'GET'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'GET');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -86,6 +97,7 @@ class RestClient
      */
     public function update($szEndpoint, $vGetParams = array(), $vParameters = array())
     {
+        $this->method = 'PATCH'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'PATCH');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -100,6 +112,7 @@ class RestClient
      */
     public function destroy($szEndpoint, $vGetParams = array(), $vParameters = array())
     {
+        $this->method = 'DELETE'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'DELETE');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -123,6 +136,11 @@ class RestClient
             $szGetParams = '?' . implode('&', $vTemp);
         }
 
+        if ($this->fDebug) {
+            //$this->oLogger->debug('call '.$this->method.' to: '.$this->szMcUrl.$szEndpoint.', with: '.print_r($vParameters,true)); // --DEBUG--
+            //$this->oLogger->debug('call '.$this->method.' to: '.$this->szMcUrl.$szEndpoint.$szGetParams); // --DEBUG--
+        }
+
         //curl_setopt($this->oCurl, CURLOPT_URL, $this->szMcUrl . $szEndpoint); // complete response
         curl_setopt($this->oCurl, CURLOPT_URL, $this->szMcUrl . $szEndpoint . $szGetParams); // reduced response
         curl_setopt($this->oCurl, CURLOPT_POSTFIELDS, $vParameters);
@@ -133,7 +151,7 @@ class RestClient
             //$curl_buffer = fopen('php://memory', 'w+');
             //curl_setopt($ch, CURLOPT_STDERR, $curl_buffer);
         //}
-        $response_body = curl_exec($this->oCurl);
+        $szResponse = curl_exec($this->oCurl);
         //$info          = curl_getinfo($this->oCurl);
         //$time          = microtime(true) - $start;
         //if ($this->debug) {
@@ -142,10 +160,10 @@ class RestClient
             //fclose($curl_buffer);
         //}
         //$this->log('Completed in ' . number_format($time * 1000, 2) . 'ms');
-        //$this->log('Got response: ' . $response_body);
+        //$this->log('Got response: ' . $szResponse);
 
         //$this->oLogger->debug('curl info: '.print_r($info,true)); // --DEBUG--
 
-        return $response_body; // still json
+        return $szResponse; // still json
     }
 }

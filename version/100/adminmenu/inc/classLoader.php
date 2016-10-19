@@ -1,5 +1,7 @@
 <?php
 /**
+ * class-loader for the MailChimp3 plugin
+ *
  * @package     jtl_mailchimp3_plugin
  * @author      JTL-Software-GmbH
  * @copyright   2016 JTL-Software-GmbH

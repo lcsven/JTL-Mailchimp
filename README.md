@@ -1,55 +1,129 @@
-MailChimp Anbindung, API-Version 3.0, für JTL-Shop4
-===================================================
+## MailChimp Anbindung für JTL-Shop4
+(MailChimp API-Version 3.0)
 
-... strongly under --DEVELOPMENT-- !
-
-
-Tab "Einstellungen"
--------------------
-
-Als Erstes ist es erforderlich, sich ein MailChimp-Konto zu erstellen.
-
-In diesem MailChimp-Konto (im Folgenden auch -account genannt), finden Sie Ihren
-s.g. API-key (unter "Account -> Extras -> API-key").
-Dieser Schlüssel ist nötig, damit MailChimp Ihren shop identifizieren und autorisieren kann.
-
-Nachdem Sie sich Ihr Konto erstellt haben, brauchen Sie noch eine Liste, zu
-der Ihr shop Ihre Newsletterempfänger hinzufügen kann.
-
-Das Plugin "JTL-MailChimp3" unterstützt derzeit die Kommunikation mit einer Liste.
-MailChimp empfiehlt zudem, möglichst auch nur eine einzige Empfängerliste zu pflegen
-und Diese möglichst "sauber" zu halten.
-Staffelungen von Mailings können Sie über Ihr MailChimp-Konto mittels dort erstellbarer
-Kampagnien, Segmentationen und anderer Unterteilungen vornehmen.
-Ziehen Sie hierzu bitte die MailChimp-Dokumantation heran.
+---
 
 
-Haben Sie nun ein entsprechendes Konto und eine Liste in Ihrem MailChimp-account erstellt,
-tragen Sie einfach den API-key im shop-backend ("Pluginverwaltung -> JTL-MailChimp3") ein
-und das MailChimp-Plugin zeigt Ihnen sodann die gefundenen Listen an.
-Nachdem Sie Ihre Liste im pulldown-Menü gewählt haben, speichern Sie bitte Ihre
-Einstellungen.
+### Pre-Requisiten
 
-Wählen Sie nun ggf. noch, ob sich shop-Nutzer, die sich ohne Ihr Zutun für Ihren
-Newletter registrieren, automatisch an Ihre MailChimp-Liste gesendet werden sollen.
-Die automatische Übertragung ist hier die Standardeinstellung.
+Bevor Sie beginnen, benötigen Sie folgende Dinge:
+
+* ein **MailChimp-Konto**
+* **eine Liste** in Ihrem MailChimp-Konto, welche Ihre Shop-Newsletterempfänger aufnimmt
+
+Sie bekommen Diese z.B. unter [MailChimp](https://login.mailchimp.com/signup).
+
+Nachdem Sie sich Ihr Konto erstellt haben, brauchen Sie noch eine Liste,
+zu der Ihr Shop Ihre Newsletterempfänger hinzufügen kann.
+
+Haben Sie diese Voraussetzungen erfüllt, können Sie mit der Einrichtung Ihres
+MailChimp3-Plugins, wie im Folgenden beschrieben, vorfahren.
+
+
+### Tab "Einstellungen"
+
+#### API-Key
+
+In Ihrem MailChimp-Konto (hier auch Account genannt), finden Sie Ihren s.g. _API-key_
+(unter `Account -> Extras -> API-key`).
+Dieser _API-key_ ist erforderlich, damit MailChimp Ihren Shop identifizieren und autorisieren kann.
+
+Tragen Sie diesen _API-key_ im MailChimp3-Plugin unter `Pluginverwaltung -> JTL-MailChimp3 -> Einstellungen` ein.
+
+_Speichern Sie nun Ihre Einstellungen._
+
+#### Empfänger-Liste
+
+Konnte das Plugin erfolgreich eine Verbindung  mit Ihrem MailChimp-Konto aufnehmen, werden Ihnen
+sodann alle gefundenen Listen Ihres Accounts angezeigt.
+
+Wählen Sie nun Ihre gewünschte Liste, die Ihr Shop zum Abgleich benutzen soll, aus und
+_klicken Sie nochmals auf Einstellungen Speichern_.
+
+> Das "JTL-MailChimp3"-Plugin unterstützt derzeit die Kommunikation mit **einer** Liste.
+>
+> MailChimp empfiehlt zudem, möglichst auch nur eine einzige Empfängerliste zu pflegen
+> und diese zudem möglichst "sauber" zu halten.
+> Staffelungen von Mailings können Sie über Ihr MailChimp-Konto, mittels dort erstellbarer
+> Kampagnen, Segmentierungen und anderer Unterteilungen vornehmen.
+>
+> Ziehen Sie hierzu bitte die MailChimp-Dokumentation zu Rate (siehe:
+> [MailChimp Knowledge Base](http://kb.mailchimp.com/campaigns/ways-to-build/create-a-campaign-with-campaign-builder)).
+
+#### Automatischer Abgleich
+
+Diese Einstellung ist standardmäßig auf "ON" gesetzt und bewirkt das automatische Eintragen,
+bzw. das automatische Löschen von Newsletter-Empfängern, auf Ihrer MailChimp-Liste.
 
 
 
-Aktion "Alle übertragen"
-------------------------
+### Aktion und Buttons
 
-Hiermit werden sämtliche Newsletter-Empfänger, die im shop registriert sind,
+#### Suchen
+
+Das Suchfeld, im oberen Bereich Ihres Plugins, wird dazu benutzt, um gezielt nach e-Mail-Adressen von
+Newsletterempfängern zu suchen.
+
+Es reduziert die aktuell "betroffener" Menge Newsletterempfänger (siehe auch "Alle übertragen").
+
+#### Gewählte übertragen
+
+Dieser Button erlaubt es Ihren, in Kombination mit den "checkboxes" vor den Namen der Newsletter-Empfänger,
+eine Auswahl Dieser an Ihre MailChimp-Liste zu schicken.
+
+Die checkbox "Alle auswählen", am Fuße der jeweiligen Listen-Seite, bezieht sich hier immer nur
+auf die aktuelle Seite.
+
+#### Alle übertragen
+
+Mit dieser Aktion werden sämtliche Newsletter-Empfänger, die im Shop registriert sind,
 an MailChimp übertragen.
-Dieser Vorgang kann, je nach Menge, einige Zeit in Anspruch nehmen.
 
-Jeder Newsletterempfänger representiert einen eigenen Datensatz, welcher zu MailChimp
-übertragen wird.
-Ein Datensatz wird hauptsächlich über die e-Mail-Adresse des Newsletterempfängers
-identifiziert.
+**BEACHTE:** Dieser Vorgang kann, je nach Anzahl der Newsletterempfänger, einige Zeit in Anspruch nehmen.
 
-Die Aktion "Alle übertrage" aktualisiert bereits vorhandene Datensätze, die
-ggf. bereits unter der gleichen e-Mail-Adresse in der antsprechenden MailChimp-Liste
-vorhanden sind..
+**BEACHTE:** Diese Funktion kann mit dem Suchfeld eingeschränkt werden.
+
+Ist eine Suche aktiv, werden mit dem "Alle übertragen"-Button ausschließlich alle von der Suche erfaßten
+Datensätze an MailChimp übertragen.
+
+Da MailChimp den Datensatz eines Newsletterempfängers anhand seiner e-Mail-Adresse identifiziert,
+können bereits bekannte e-Mail-Adressen nicht noch einmal angelegt werden.
+
+---
+
+### Zusätzliches
+
+MailChimp bietet dem Benutzer die Möglichkeit, wahlfrei Felder zu einem Newsletterempfängers-Datensatz
+anzulegen. Standardmäßig sind dies `FNAME` für "first name" und `LNAME` "last name".
+
+Eine Anrede ist hier leider nicht vorgesehen.
+
+In Ihrem JTL-Shop wird diese Information allerdings bereits vorgehalten und
+das "JTL-MailChimp3"-Plugin kann diese Information auch an MailChimp übertragen.
+
+Das zusätzliche Feld, welches das Plugin überträgt, hat den Namen:
+```
+GENDER
+```
+und enthält die Werte `f` für "female und `m` für "male".
+
+Um diesen Feld nun in Ihren MailChimp-Listen nutzen zu können, ist es erforderlich,
+in Ihrem MailChimp-Konto ein neues "Merge"-Feld anzulegen.
+(siehe: [Merge Tags](http://kb.mailchimp.com/merge-tags/getting-started-with-merge-tags))
+
+
+---
+
+### "Known Problems"
+
+Da MailChimp eine weltweit intensiv genutzte Plattform ist, ist man dort gezwungen, starken Gebraucht
+von Zwischenspeicherungs-Mechanismen ("cache").
+Dies führt dazu, daß die beispielsweise die Listen-Anzeige im Benutzer-Konto nicht immer umgehend
+die korrekten/tatsächlichen Anzahlen an Newsletterempfängern anzeigt.
+
+Es kann somit sein, daß ein soeben eingetragener Newsletter-Empfänger nicht sofort in der entsprechenden
+MailChimp-Liste sichtbar ist.
+
+Dies ist kein Fehler, sondern dem Umstand geschuldet, daß sich hier viele System miteinander abgleichen müssen.
 
 

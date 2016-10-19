@@ -8,25 +8,43 @@
     {/if}
 {/if}
 
-<!--
-<style>
-    table {
-        width: 100%;
-        border: solid 1px #ccc;
-    }
-    th {
-        padding: 8px;
-        /* border: solid 1px #ccc; --TO-CHECK--   */
-    }
-</style>
--->
-
 {literal}
 <script>
     $(document).ready(function() {
 
+        // insert a "check-/un-check all"-handler
         $('#checkAll').change(function() {
             $("input:checkbox").prop('checked', $(this).prop("checked"));
+        });
+
+        // insert a "post-handler" for the "search-submit"-field
+        $('form[name=subscribers_search]').on('submit', function() {
+            uri = document.URL;
+            vUrl = uri.split('?'); // cut the URI in two pieces
+
+            var szNewParams = '';
+            var vParams = vUrl[1].split('&'); // split parameters in key-value-pairs
+            for (var i in vParams) {
+                // if there is a 'search-field'
+                if (vParams[i].startsWith('cSearchField')) {
+                    // drop out its value
+                    vParams[i] = vParams[i].substr(0, vParams[i].indexOf('=')) + '=';
+                    // set the 'search-field' value as new the value for that parameter
+                    var szNewValue = $('form[name=subscribers_search] input[name=cSearchField]').val();
+                    // re-build the parameters (at first as a array)
+                    vParams[i] += szNewValue;
+                }
+                // merge a new parameter-string
+                if ('' === szNewParams) {
+                    szNewParams += vParams[i];
+                } else {
+                    szNewParams += '&' + vParams[i];
+                }
+            }
+            // merge the uri with new "search"-(or param-)part of the url
+            vUrl[0] += '?' + szNewParams;
+            // set our new uri as the form-action
+            $('form[name=subscribers_search]').attr('action', vUrl[0]);
         });
 
     });
@@ -34,26 +52,33 @@
 {/literal}
 
 <div class="panel panel-default">
-    <form class="subscribers" method="post" action="">
+    <form name="subscribers_search" method="post" action="">
     {$jtl_token}
     <div id="settings">
 
         {* search *}
         <div class="input-group">
             <span class="input-group-addon">
-                <label for="ccSearchString">e-Mail Suche:</label>
+                <label for="cSearchField">e-Mail Suche:</label>
             </span>
-            <input class="form-control" name="cSearchString" type="text" value="{if isset($cSearchString) && $cSearchString|strlen > 0}{$cSearchString}{/if}" />
+            {*<input type="hidden" name="kPlugin" value="{$oPlugin->kPlugin}">*}
+            <input class="form-control" id="cSearchField" name="cSearchField" type="text" value="{if isset($szSearchString) && $szSearchString|strlen > 0}{$szSearchString}{/if}" />
             <span class="input-group-btn">
                 <button name="search" type="submit" class="btn btn-primary" value="email_search">
                     <i class="fa fa-search"></i> Suchen
                 </button>
             </span>
         </div>
+    </form>
 
-        {* pagination *}
-        {include file='tpl_inc/pagination.tpl' oPagination=$oPagiInaktiveAbos cAnchor='inaktiveabonnenten' cParam_arr=['kPlugin'=>$oPlugin->kPlugin]}
+    {* pagination *}
+    {if isset($szSearchString)}
+        {include file='tpl_inc/pagination.tpl' oPagination=$oPagiMailChimp cParam_arr=['kPlugin'=>$oPlugin->kPlugin,'cSearchField'=>$szSearchString]}
+    {else}
+        {include file='tpl_inc/pagination.tpl' oPagination=$oPagiMailChimp cParam_arr=['kPlugin'=>$oPlugin->kPlugin]}
+    {/if}
 
+    <form name="subscribers" method="post" action="">
         {*<table class="table table-condensed table-striped table-hover">*}
         {*<table class="table table-condensed table-hover">*}
         <table class="table table-hover">
@@ -99,7 +124,7 @@
                             <i class="fa fa-remove"></i>
                         </button>
                     {else}
-                        <button class="btn btn-success btn-xs" title="mit Liste synchronisieren" name="add" value="{$oNewsletterReceiver->subscriberHash}">
+                        <button class="btn btn-success btn-xs" type="submit" title="mit Liste synchronisieren" name="add" value="{$oNewsletterReceiver->subscriberHash}">
                             <i class="fa fa-share-square-o"></i>
                         </button>
                     {/if}

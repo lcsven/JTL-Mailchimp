@@ -12,24 +12,23 @@
     <Install>
         <Version nr="100">
             <CreateDate>2016-09-27</CreateDate>
-			<SQL>install-100.sql</SQL>
+			<!--<SQL>install-100.sql</SQL>-->
         </Version>
-
         <Hooks>
+            <Hook id="37">37_hook_newsletter_page_empfaengereintragen.php</Hook>
             <Hook id="38">38_hook_newsletter_page_empfaengerloeschen.php</Hook>
-            <Hook id="39">39_hook_newsletter_page_empfaengerfreischalten.php</Hook>
-            <Hook id="132">132_hook_index_navi_head_postget.php</Hook>
+            <!--<Hook id="39">39_hook_newsletter_page_empfaengerfreischalten.php</Hook>-->
+            <!--<Hook id="132">132_hook_index_navi_head_postget.php</Hook>-->
         </Hooks>
-
 		<Adminmenu>
 			<Customlink sort="1">
 				<Name>Abonnenten</Name>
 				<Filename>tab_abonnenten.php</Filename>
 			</Customlink>
-            <!--<Customlink sort="3">-->
-                <!--<Name>Initialisierung</Name>-->
-				<!--<Filename>tab_initialize.php</Filename>-->
-            <!--</Customlink>-->
+            <Customlink sort="3">
+                <Name>Dokumentation</Name>
+                <Filename>tab_documentation.php</Filename>
+            </Customlink>
 			<Settingslink sort="2">
 				<Setting type="text" initialValue="" sort="0" conf="N">
 					<Name>Allgemein</Name>
@@ -54,7 +53,7 @@
                     </SelectboxOptions>
                 </Setting>
                 <Setting type="checkbox" initialValue="on" sort="3" conf="Y">
-                    <Name>automatisch Eintragen</Name>
+                    <Name>automatischer Abgleich</Name>
                     <Description>Sobald sich ein Kunden für den shop-Newsletter anmeldet, wird er automatisch zu MailChimp übertragen</Description>
                     <ValueName>jtl_mailchimp3_autosync</ValueName>
                 </Setting>
