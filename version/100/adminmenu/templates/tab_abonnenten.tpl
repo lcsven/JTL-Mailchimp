@@ -79,6 +79,7 @@
     {/if}
 
     <form name="subscribers" method="post" action="">
+        {$jtl_token}
         {*<table class="table table-condensed table-striped table-hover">*}
         {*<table class="table table-condensed table-hover">*}
         <table class="table table-hover">

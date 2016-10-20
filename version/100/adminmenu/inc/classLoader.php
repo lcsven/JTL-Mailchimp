@@ -27,5 +27,7 @@ function classLoader($szClassName)
 }
 $PREPEND         = false;
 $THROW_EXCEPTION = true;
-spl_autoload_register('classLoader', $THROW_EXCEPTION, $PREPEND);
-
+if (function_exists('classLoader')) {
+    spl_autoload_unregister('classLoader'); // remove the previouse version autoloader
+    spl_autoload_register('classLoader', $THROW_EXCEPTION, $PREPEND); // re-chain the new one
+}
