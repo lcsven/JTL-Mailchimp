@@ -48,7 +48,7 @@ _klicken Sie nochmals auf Einstellungen Speichern_.
 > Kampagnen, Segmentierungen und anderer Unterteilungen vornehmen.
 >
 > Ziehen Sie hierzu bitte die MailChimp-Dokumentation zu Rate (siehe:
-> [MailChimp Knowledge Base](http://kb.mailchimp.com/campaigns/ways-to-build/create-a-campaign-with-campaign-builder)).
+> [MailChimp Knowledge-Base](http://kb.mailchimp.com/campaigns/ways-to-build/create-a-campaign-with-campaign-builder)).
 
 #### Automatischer Abgleich
 
@@ -107,9 +107,9 @@ GENDER
 ```
 und enthält die Werte `f` für "female und `m` für "male".
 
-Um diesen Feld nun in Ihren MailChimp-Listen nutzen zu können, ist es erforderlich,
+Um dieses Feld nun in Ihren MailChimp-Listen nutzen zu können, ist es erforderlich,
 in Ihrem MailChimp-Konto ein neues "Merge"-Feld anzulegen.
-(siehe: [Merge Tags](http://kb.mailchimp.com/merge-tags/getting-started-with-merge-tags))
+(siehe: [MailChimp Merge-Tags](http://kb.mailchimp.com/merge-tags/getting-started-with-merge-tags))
 
 
 ---
@@ -117,9 +117,9 @@ in Ihrem MailChimp-Konto ein neues "Merge"-Feld anzulegen.
 ### "Known Problems"
 
 Da MailChimp eine weltweit intensiv genutzte Plattform ist, ist man dort gezwungen, starken Gebraucht
-von Zwischenspeicherungs-Mechanismen ("cache").
-Dies führt dazu, daß die beispielsweise die Listen-Anzeige im Benutzer-Konto nicht immer umgehend
-die korrekten/tatsächlichen Anzahlen an Newsletterempfängern anzeigt.
+von Zwischenspeicherungs-Mechanismen ("caches") zu machen.
+Dies führt dazu, daß beispielsweise die Listen-Anzeige im Benutzer-Konto nicht immer umgehend
+die korrekten und tatsächlichen Anzahlen von Newsletterempfängern darstellt.
 
 Es kann somit sein, daß ein soeben eingetragener Newsletter-Empfänger nicht sofort in der entsprechenden
 MailChimp-Liste sichtbar ist.
