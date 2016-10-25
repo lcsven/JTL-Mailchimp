@@ -12,7 +12,9 @@
     <Install>
         <Version nr="100">
             <CreateDate>2016-09-27</CreateDate>
-			<!--<SQL>install-100.sql</SQL>-->
+        </Version>
+        <Version nr="101">
+            <CreateDate>2016-10-20</CreateDate>
         </Version>
         <Hooks>
             <Hook id="37">37_hook_newsletter_page_empfaengereintragen.php</Hook>
