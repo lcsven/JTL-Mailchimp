@@ -7,19 +7,7 @@
  * @copyright   2016 JTL-Software-GmbH
  */
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --DEBUG--
-Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
-$oLogger = Logger::getLogger('default');
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --DEBUG--
-
 require_once($oPlugin->cAdminmenuPfad . 'inc/classLoader.php');
-
-
-//$oLogger->debug('_REQUEST: ' . print_r($_REQUEST, true)); // --DEBUG--
-//$oLogger->debug('_GET: ' . print_r($_GET, true)); // --DEBUG--
-//$oLogger->debug('_POST: '.print_r($_POST, true)); // --DEBUG--
-//$oLogger->debug('_SESSION: '.print_r( $_SESSION ,true)); // --DEBUG--
-
 
 $oDbLayer = Shop::DB();
 $cQuery   = ' SELECT'
@@ -67,71 +55,6 @@ if ('' !== $szApiKey && '' !== $szListId) {
     if (validateToken()) {
         // leaded by the buttons posted ...
         switch (true) {
-            // {{{  old POST-methods
-            /*
-            case (isset($_POST['add'])):
-                // add the "clicked" member (action-button) as subscriber to the current list
-                if (isset($oReceiverIndexHash_arr[$_POST['add']])) {
-                    // (use the receiver index-hash to find the newsletter-receiver in "local"-list)
-                    $oCurrentNewsletterReceiver = $oNewsletterReceiver_arr[$oReceiverIndexHash_arr[$_POST['add']]];
-                }
-                $oMember = new MailChimpSubscriber();
-                $oMember->set('email_address', $oCurrentNewsletterReceiver->cEmail)
-                        ->set('status'       ,  'subscribed')
-                        ->set('merge_fields' ,  array(
-                                          'FNAME' => $oCurrentNewsletterReceiver->cVorname
-                                        , 'LNAME' => $oCurrentNewsletterReceiver->cNachname
-                                        , 'GENDER' => $oCurrentNewsletterReceiver->cGender // additional merge-field (not MC-default)
-                                        )
-                        );
-                try {
-                    $iSuccessCount = $oLists->createMember($szListId, $oMember);
-                    $smarty->assign('cHinweis', $iSuccessCount . ' Empf&auml;nger &uuml;bertragen');
-                } catch (ExceptionMailChimp $eMC) {
-                    $smarty->assign('cFehler', $eMC->getMessage());
-                }
-                break;
-            */
-
-            /*
-            case (isset($_POST['remove'])):
-                // remove a "clicked" subscriber from the current MailChimp-list
-                try {
-                    $iSuccessCount = $oLists->deleteMember($szListId, $_POST['remove']);
-                    $smarty->assign('cHinweis', $iSuccessCount . ' Empf&auml;nger gel&ouml;scht');
-                } catch (ExceptionMailChimp $eMC) {
-                    $smarty->assign('cFehler', $eMC->getMessage());
-                }
-                break;
-            */
-
-            /*
-            case (isset($_POST['update'])):
-                $oLogger->debug('update ... '); // --DEBUG--
-                // add the "clicked" member (action-button) as subscriber to the current list
-                if (isset($oReceiverIndexHash_arr[$_POST['update']])) {
-                    // (use the receiver index-hash to find the newsletter-receiver in "local"-list)
-                    $oCurrentNewsletterReceiver = $oNewsletterReceiver_arr[$oReceiverIndexHash_arr[$_POST['update']]];
-                }
-                $oMember = new MailChimpSubscriber();
-                $oMember->set('email_address', $oCurrentNewsletterReceiver->cEmail)
-                        ->set('status'       ,  'subscribed')
-                        ->set('merge_fields' ,  array(
-                                          'FNAME' => $oCurrentNewsletterReceiver->cVorname
-                                        , 'LNAME' => $oCurrentNewsletterReceiver->cNachname
-                                        , 'GENDER' => $oCurrentNewsletterReceiver->cGender // additional merge-field (not MC-default)
-                                        )
-                        );
-                try {
-                    $iSuccessCount = $oLists->updateMember($szListId, $oMember);
-                    $smarty->assign('cHinweis', $iSuccessCount . ' Empf&auml;nger aktualisiert');
-                } catch (ExceptionMailChimp $eMC) {
-                    $smarty->assign('cFehler', $eMC->getMessage());
-                }
-                break;
-            */
-            // }}}
-
             case (isset($_POST['sync']) && 'sync_part' === $_POST['sync']):
                 // transfer the selected members to MailChimp
                 $oNewsletterReceiverSelected_arr = array();
@@ -159,14 +82,13 @@ if ('' !== $szApiKey && '' !== $szListId) {
                     $smarty->assign('cFehler', $eMC->getMessage());
                 }
                 break;
-            //default:
-                //$smarty->assign('cFehler', 'wrong POST!');
+            default:
+                // this should never occur unpunished!
+                throw new Exception('wrong POST!');
         }
     }
-
     // read all members and their subscriber-state from MailChimp and show the results
     $oMembers_arr = $oLists->getAllMembers($szListId, 0);
-
     for ($i = 0; $i < count($oNewsletterReceiver_arr); $i++) {
         // insert(!) and update fields in our nl-receiver-array (e.g. remote states)
         if (array_key_exists($oNewsletterReceiver_arr[$i]->subscriberHash, $oLists->vIndexListMembers)) {
@@ -195,11 +117,9 @@ $smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr)
 ;
 // set the following every time permanently, because they would switched via js
 if (null === $smarty->getTemplateVars('cHinweis')) {
-//if (null !== $smarty->get_template_vars('cHinweis')) {
     $smarty->assign('cHinweis', '#');
 }
 if (null === $smarty->getTemplateVars('cFehler')) {
-//if (null !== $smarty->get_template_vars('cFehler')) {
     $smarty->assign('cFehler', '#');
 }
 $smarty->display($oPlugin->cAdminmenuPfad . 'templates/tab_abonnenten.tpl');

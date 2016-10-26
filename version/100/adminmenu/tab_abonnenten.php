@@ -7,21 +7,7 @@
  * @copyright   2016 JTL-Software-GmbH
  */
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --DEBUG--
-//Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
-//$oLogger = Logger::getLogger('default');
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --DEBUG--
-
 require_once($oPlugin->cAdminmenuPfad . 'inc/classLoader.php');
-
-
-//$oLogger->debug(''.print_r( $oPlugin ,true)); // --DEBUG--
-//
-//$oLogger->debug('_REQUEST: ' . print_r($_REQUEST, true)); // --DEBUG--
-//$oLogger->debug('_GET: ' . print_r($_GET, true)); // --DEBUG--
-//$oLogger->debug('_POST: '.print_r($_POST, true)); // --DEBUG--
-//$oLogger->debug('_SESSION: '.print_r( $_SESSION ,true)); // --DEBUG--
-
 
 $oDbLayer = Shop::DB();
 $cQuery   = ' SELECT'
@@ -52,7 +38,6 @@ $oNewsletterReceiver_arr = $oDbLayer->query($cQuery, 2);
 foreach ($oNewsletterReceiver_arr as $key => $oVal) {
     $oReceiverIndexHash_arr[$oVal->subscriberHash] = $key;
 }
-
 // re-fill the search-field
 if (isset($_REQUEST['cSearchField'])) {
     $smarty->assign('szSearchString', $_REQUEST['cSearchField']);
@@ -63,7 +48,6 @@ if (isset($_REQUEST['cSearchField'])) {
 $szApiKey = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key'];
 $szListId = $oPlugin->oPluginEinstellungAssoc_arr['jtl_mailchimp3_list'];
 // if we got 'n account and a list, we proceed ...
-//if ('' !== $szApiKey && '' !== $szListId && validateToken()) {
 if ('' !== $szApiKey && '' !== $szListId) {
     // create a MailChimp-object for "List"-endpoints and give them a REST-client
     $oLists = MailChimpLists::getInstance(new RestClient($szApiKey));
@@ -134,7 +118,6 @@ if ('' !== $szApiKey && '' !== $szListId) {
                 //$smarty->assign('cFehler', 'wrong POST!');
         }
     }
-
     // read all members and their subscriber-state from MailChimp and show the results
     $oMembers_arr = $oLists->getAllMembers($szListId, 0);
 

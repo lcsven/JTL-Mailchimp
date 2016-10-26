@@ -12,7 +12,7 @@ class ExceptionMailChimp extends Exception
     /** exception message (default is overwritten in __construct()) */
     protected $szMessage = 'Unknown MailChimp-Exception';
 
-    /** plugin-own error-code - used for the return-codes of MailChimp */
+    /** plugin-own error-code - used for the return-codes of MailChimp (default is overwritten in __construct())*/
     protected $iCode     = 100;
 
     /** previouse exception, if nested */
@@ -23,8 +23,6 @@ class ExceptionMailChimp extends Exception
      * construct a exception
      *
      * @param string  exception-message text
-     * @param integer  plugin-own error-code
-     * @param object  previouse exception, if nested called
      * @return void
      */
     public function __construct($oResponseMessage)

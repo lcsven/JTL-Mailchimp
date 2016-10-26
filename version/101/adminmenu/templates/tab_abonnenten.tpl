@@ -45,7 +45,7 @@
                 if (vParams[i].startsWith('cSearchField')) {
                     // drop out its value
                     vParams[i] = vParams[i].substr(0, vParams[i].indexOf('=')) + '=';
-                    // set the 'search-field' value as new the value for that parameter
+                    // set the 'search-field' value as the new value for that parameter
                     var szNewValue = $('form[name=subscribers_search] input[name=cSearchField]').val();
                     // re-build the parameters (at first as a array)
                     vParams[i] += szNewValue;
@@ -57,7 +57,7 @@
                     szNewParams += '&' + vParams[i];
                 }
             }
-            // merge the uri with new "search"-(or param-)part of the url
+            // merge the uri with a new "search"-(or param-)part of the url
             vUrl[0] += '?' + szNewParams;
             // set our new uri as the form-action
             $('form[name=subscribers_search]').attr('action', vUrl[0]);
@@ -66,7 +66,7 @@
     });
 
 
-    function ajaxVoodoo(szAction, szSubscriberHash) {
+    function ajaxAction(szAction, szSubscriberHash) {
         var oUserData = {}; // prepare a user-data-object (later used for json-encoding)
         if ('add' === szAction || 'update' === szAction) {
             // collect our user-data from the hidden-input fields (we do that only for the action "add"!)
@@ -75,16 +75,15 @@
                 // inject our fields as props into an object
                 oUserData[$(oFieldData[i]).attr('name')] = $(oFieldData[i]).attr('value');
             }
-            //console.log(oUserData); // --DEBUG--
         }
 
         var szFormatStore = ''; // to hold the class-string of the clicked element, during ajax-load(er)
         $.ajax({
-              method: 'get'
-            , cache: false // to prevent the caching of the browser (but works only with GET, because there ist a time-hash-param)
-            , async: true // --TO-CHECK-- maybe it's better, to do one operation a time (so use 'false' here here)
-            , url: szAjaxEndpoint
-            , data: {
+              method :  'get'
+            , cache  :  false // to prevent the caching of the browser (but works only with GET, because there ist a time-hash-param)
+            , async  :  true // we did not wait for one operation is finished (but if it's necessary, so use 'false' here)
+            , url    :  szAjaxEndpoint
+            , data   :  {
                   action           : szAction
                 , szSubscriberHash : szSubscriberHash
                 , szApiKey         : $('input[name=szApiKey]').val()
@@ -98,7 +97,7 @@
                     szFormatStore = $('span[name='+szAction+'][value='+szSubscriberHash+'] > i').attr('class');
                     // activate the ajax-loader (dot-ring)
                     $('span[name='+szAction+'][value='+szSubscriberHash+'] > i').attr('class', 'fa fa-cog fa-spin');
-                    //$('span[name='+szAction+'][value='+szSubscriberHash+'] > i').attr('class', 'fa fa-spinner fa-pulse');
+                    //$('span[name='+szAction+'][value='+szSubscriberHash+'] > i').attr('class', 'fa fa-spinner fa-pulse'); // (enlarges the button!)
                     //$('span[name='+szAction+'][value='+szSubscriberHash+']').attr('class', 'fa fa-cog fa-spin'); // rotation FUN! :D
                 }
         })
@@ -106,15 +105,12 @@
             // restore the format of the clicked (span.i)
             $('span[name='+szAction+'][value='+szSubscriberHash+'] > i').attr('class', szFormatStore);
 
-            //console.log('DONE. (response: '+response+')'); // --DEBUG--
-
             var oResponse    =  jQuery.parseJSON(response);
             // at first, switch off all banners
             oErrorBanner.css('display', 'none');
             oSuccsBanner.css('display', 'none');
 
             if('' === oResponse.szErrorMsg) {
-
                 if ('add' === szAction) {
                     // set the "cHinweis"-message
                     oSuccsBanner.html(oResponse.iSuccessCount+' Eintrag hinzugef&uuml;gt.');
@@ -124,19 +120,18 @@
                     $('span[name=update][value='+szSubscriberHash+']').css('display', 'inline-block');
                     $('span[name=add][value='+szSubscriberHash+']').css('display', 'none');
 
-                    // in case of errors, we set a default filling
+                    // in case of errors, we set a default fill
                     $('td[name=dLastSync][id='+szSubscriberHash+']').text('-');
                     $('td[name=szListName][id='+szSubscriberHash+']').text('-');
                     // set the cols with responded values (sync-time and list-name)
                     if (null !== oResponse.oRestResponse) {
                         dSyncDate        = new Date(oResponse.oRestResponse.last_changed);
                         var szLocaleDate = dSyncDate.toLocaleDateString();
-                        var szLocaleTime = padZeroString(dSyncDate.getHours())+':'+padZeroString(dSyncDate.getMinutes());
+                        var szLocaleTime = paddZeroToString(dSyncDate.getHours())+':'+paddZeroToString(dSyncDate.getMinutes());
                         $('td[name=dLastSync][id='+szSubscriberHash+']').text(szLocaleDate+' '+szLocaleTime);
                         $('td[name=szListName][id='+szSubscriberHash+']').text(oResponse.szListName);
                     }
                 }
-
                 if ('update' === szAction) {
                     // set the "cHinweis"-message
                     oSuccsBanner.html(oResponse.iSuccessCount+' Eintrag aktualisiert.');
@@ -145,12 +140,11 @@
                     if (null !== oResponse.oRestResponse) {
                         dSyncDate        = new Date(oResponse.oRestResponse.last_changed);
                         var szLocaleDate = dSyncDate.toLocaleDateString();
-                        var szLocaleTime = padZeroString(dSyncDate.getHours())+':'+padZeroString(dSyncDate.getMinutes());
+                        var szLocaleTime = paddZeroToString(dSyncDate.getHours())+':'+paddZeroToString(dSyncDate.getMinutes());
                         $('td[name=dLastSync][id='+szSubscriberHash+']').text(szLocaleDate+' '+szLocaleTime);
                         $('td[name=szListName][id='+szSubscriberHash+']').text(oResponse.szListName);
                     }
                 }
-
                 if ('remove' === szAction) {
                     // set the "cHinweis"-message
                     oSuccsBanner.html(oResponse.iSuccessCount+' Eintrag gel&ouml;scht.');
@@ -164,23 +158,15 @@
                     $('td[name=dLastSync][id='+szSubscriberHash+']').text('n.v.');
                     $('td[name=szListName][id='+szSubscriberHash+']').text('n.v.');
                 }
-
             } else {
                 // set the "cFehler"-message
                 oErrorBanner.text(oResponse.szErrorMsg);
                 oErrorBanner.css('display', 'inherit');
             }
-
-            //console.log('oResponse.oResponse: '+oResponse.oRestResponse.last_changed); // --DEBUG--
-            //console.log('element: '+$('td[name=dLastSync][id='+szSubscriberHash+']').html()); // --DEBUG--
         });
     }
 
-    function padZeroString(iNumber) {
-        /*
-        szResult = (10 > iNumber) ? '0'+iNumber.toString() : iNumber.toString();
-        return szResult;
-        */
+    function paddZeroToString(iNumber) {
         return (10 > iNumber) ? '0'+iNumber.toString() : iNumber.toString();
     }
 
@@ -199,7 +185,6 @@
             <span class="input-group-addon">
                 <label for="cSearchField">e-Mail Suche:</label>
             </span>
-            {*<input type="hidden" name="kPlugin" value="{$oPlugin->kPlugin}">*}
             <input class="form-control" id="cSearchField" name="cSearchField" type="text" value="{if isset($szSearchString) && $szSearchString|strlen > 0}{$szSearchString}{/if}" />
             <span class="input-group-btn">
                 <button name="search" type="submit" class="btn btn-primary" value="email_search">
@@ -267,14 +252,14 @@
 
                     <td class="tcenter">
                     {assign var='display' value=(isset($oNewsletterReceiver->remote) && $oNewsletterReceiver->remote === true)}
-                        <span style="display:{(true === $display) ? 'inline-block' : 'none'};" class="btn btn-warning btn-xs" name="update" title="aktualisieren" value="{$oNewsletterReceiver->subscriberHash}" onclick="ajaxVoodoo('update', '{$oNewsletterReceiver->subscriberHash}')">
+                        <span style="display:{(true === $display) ? 'inline-block' : 'none'};" class="btn btn-warning btn-xs" name="update" title="aktualisieren" value="{$oNewsletterReceiver->subscriberHash}" onclick="ajaxAction('update', '{$oNewsletterReceiver->subscriberHash}')">
                             <i class="fa fa-refresh"></i>
                         </span>
-                        <span style="display:{(true === $display) ? 'inline-block' : 'none'};" class="btn btn-danger btn-xs" name="remove" title="von Liste l&ouml;schen" value="{$oNewsletterReceiver->subscriberHash}" onclick="ajaxVoodoo('remove', '{$oNewsletterReceiver->subscriberHash}')">
+                        <span style="display:{(true === $display) ? 'inline-block' : 'none'};" class="btn btn-danger btn-xs" name="remove" title="von Liste l&ouml;schen" value="{$oNewsletterReceiver->subscriberHash}" onclick="ajaxAction('remove', '{$oNewsletterReceiver->subscriberHash}')">
                             <i class="fa fa-remove"></i>
                         </span>
 
-                        <span style="display:{(false === $display) ? 'inline-block' : 'none'};" class="btn btn-success btn-xs" name="add" title="mit Liste synchronisieren" value="{$oNewsletterReceiver->subscriberHash}" onclick="ajaxVoodoo('add', '{$oNewsletterReceiver->subscriberHash}')">
+                        <span style="display:{(false === $display) ? 'inline-block' : 'none'};" class="btn btn-success btn-xs" name="add" title="mit Liste synchronisieren" value="{$oNewsletterReceiver->subscriberHash}" onclick="ajaxAction('add', '{$oNewsletterReceiver->subscriberHash}')">
                             <i class="fa fa-share-square-o"></i>
                         </span>
                     </td>

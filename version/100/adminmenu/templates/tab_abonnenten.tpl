@@ -29,7 +29,7 @@
                 if (vParams[i].startsWith('cSearchField')) {
                     // drop out its value
                     vParams[i] = vParams[i].substr(0, vParams[i].indexOf('=')) + '=';
-                    // set the 'search-field' value as new the value for that parameter
+                    // set the 'search-field' value as the new value for that parameter
                     var szNewValue = $('form[name=subscribers_search] input[name=cSearchField]').val();
                     // re-build the parameters (at first as a array)
                     vParams[i] += szNewValue;
@@ -61,7 +61,6 @@
             <span class="input-group-addon">
                 <label for="cSearchField">e-Mail Suche:</label>
             </span>
-            {*<input type="hidden" name="kPlugin" value="{$oPlugin->kPlugin}">*}
             <input class="form-control" id="cSearchField" name="cSearchField" type="text" value="{if isset($szSearchString) && $szSearchString|strlen > 0}{$szSearchString}{/if}" />
             <span class="input-group-btn">
                 <button name="search" type="submit" class="btn btn-primary" value="email_search">

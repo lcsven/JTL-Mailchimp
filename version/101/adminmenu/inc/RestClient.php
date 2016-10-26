@@ -13,24 +13,11 @@ class RestClient
     private $apiKey  = '';
     private $oCurl   = null;
 
-    // local debug-possibility with "apache log4php"
-    private $fDebug  = true; // "log4php" is medatory! (composer require 'apache/log4php:dev-master')
-    public $oLogger  = null;
-    public $method   = '';
-
-
     /**
      * construct and initialize a cURL-client object
      */
     public function __construct($apiKey)
     {
-        // --DEBUG--
-        if (true === $this->fDebug) {
-            Logger::configure('/var/www/html/shop4_03/_logging_conf.xml');
-            $this->oLogger = Logger::getLogger('default');
-        }
-        // --DEBUG--
-
         $this->apiKey = $apiKey;
 
         // set a api-mirror, if any is pending at the api-key (defaults to 'us1')
@@ -55,8 +42,6 @@ class RestClient
         curl_setopt($this->oCurl, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($this->oCurl, CURLOPT_TIMEOUT, 30);
         curl_setopt($this->oCurl, CURLOPT_SSL_VERIFYPEER, false); // added by convention of API v3.0
-        //
-        //curl_setopt($this->oCurl, CURLOPT_VERBOSE, $this->debug); // --OPTIONAL--
     }
 
     /**
@@ -69,7 +54,6 @@ class RestClient
      */
     public function create($szEndpoint, $vGetParams = array(), $vParameters = array())
     {
-        $this->method = 'POST'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'POST');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -82,9 +66,8 @@ class RestClient
      * @param array  []
      * @return string  json-string, "response-body"
      */
-    public function retrieve($szEndpoint, $vGetParams = array(),  $vParameters = array())
+    public function retrieve($szEndpoint, $vGetParams = array(), $vParameters = array())
     {
-        $this->method = 'GET'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'GET');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -99,7 +82,6 @@ class RestClient
      */
     public function update($szEndpoint, $vGetParams = array(), $vParameters = array())
     {
-        $this->method = 'PATCH'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'PATCH');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -114,7 +96,6 @@ class RestClient
      */
     public function destroy($szEndpoint, $vGetParams = array(), $vParameters = array())
     {
-        $this->method = 'DELETE'; // --DEBUG--
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'DELETE');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
@@ -138,34 +119,14 @@ class RestClient
             $szGetParams = '?' . implode('&', $vTemp);
         }
 
-        if ($this->fDebug) {
-            //$this->oLogger->debug('call '.$this->method.' to: '.$this->szMcUrl.$szEndpoint.', with: '.print_r($vParameters,true)); // --DEBUG--
-            $this->oLogger->debug('call '.$this->method.' to: '.$this->szMcUrl.$szEndpoint.$szGetParams); // --DEBUG--
-        }
-
         //curl_setopt($this->oCurl, CURLOPT_URL, $this->szMcUrl . $szEndpoint); // complete response
         curl_setopt($this->oCurl, CURLOPT_URL, $this->szMcUrl . $szEndpoint . $szGetParams); // reduced response
         curl_setopt($this->oCurl, CURLOPT_POSTFIELDS, $vParameters);
 
-
-        //$start = microtime(true);
-        //if ($this->debug) {
-            //$curl_buffer = fopen('php://memory', 'w+');
-            //curl_setopt($ch, CURLOPT_STDERR, $curl_buffer);
-        //}
+        // execute the cURL-call
         $szResponse = curl_exec($this->oCurl);
-        //$info          = curl_getinfo($this->oCurl);
-        //$time          = microtime(true) - $start;
-        //if ($this->debug) {
-            //rewind($curl_buffer);
-            //$this->log(stream_get_contents($curl_buffer));
-            //fclose($curl_buffer);
-        //}
-        //$this->log('Completed in ' . number_format($time * 1000, 2) . 'ms');
-        //$this->log('Got response: ' . $szResponse);
 
-        //$this->oLogger->debug('curl info: '.print_r($info,true)); // --DEBUG--
-
-        return $szResponse; // still json
+        return $szResponse; // the response is still JSON(!)
     }
 }
+
