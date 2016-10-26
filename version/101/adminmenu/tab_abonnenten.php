@@ -15,11 +15,9 @@ $oLogger = Logger::getLogger('default');
 require_once($oPlugin->cAdminmenuPfad . 'inc/classLoader.php');
 
 
-//$oLogger->debug(''.print_r( $oPlugin ,true)); // --DEBUG--
-//
 //$oLogger->debug('_REQUEST: ' . print_r($_REQUEST, true)); // --DEBUG--
-$oLogger->debug('_GET: ' . print_r($_GET, true)); // --DEBUG--
-$oLogger->debug('_POST: '.print_r($_POST, true)); // --DEBUG--
+//$oLogger->debug('_GET: ' . print_r($_GET, true)); // --DEBUG--
+//$oLogger->debug('_POST: '.print_r($_POST, true)); // --DEBUG--
 //$oLogger->debug('_SESSION: '.print_r( $_SESSION ,true)); // --DEBUG--
 
 
@@ -195,7 +193,7 @@ $smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr)
        ->assign('szListId', $szListId)
        ->assign('szListName', $oLists->listNames[$szListId])
 ;
-// set the following permanently, because they would switched via js
+// set the following every time permanently, because they would switched via js
 if (null === $smarty->getTemplateVars('cHinweis')) {
 //if (null !== $smarty->get_template_vars('cHinweis')) {
     $smarty->assign('cHinweis', '#');

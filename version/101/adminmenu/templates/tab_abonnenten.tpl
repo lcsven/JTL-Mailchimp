@@ -85,12 +85,12 @@
             , async: true // --TO-CHECK-- maybe it's better, to do one operation a time (so use 'false' here here)
             , url: szAjaxEndpoint
             , data: {
-                  action: szAction
-                , szSubscriberHash: szSubscriberHash
-                , szApiKey: $('input[name=szApiKey]').val()
-                , szListId: $('input[name=szListId]').val()
-                , userData: JSON.stringify(oUserData)
-                , token: $('[name$=jtl_token]').val()
+                  action           : szAction
+                , szSubscriberHash : szSubscriberHash
+                , szApiKey         : $('input[name=szApiKey]').val()
+                , szListId         : $('input[name=szListId]').val()
+                , userData         : JSON.stringify(oUserData)
+                , token            : $('[name$=jtl_token]').val()
               }
             , beforeSend: function(request) {
                     request.setRequestHeader('Pragma', 'no-cache'); // to prevent the server to send cached stuff
