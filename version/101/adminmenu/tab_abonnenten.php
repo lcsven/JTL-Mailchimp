@@ -29,7 +29,7 @@ if (isset($_REQUEST['cSearchField']) && '' !== $_REQUEST['cSearchField']
     // if we're in search-mode, we extend our SQL by a WHERE-clause
     // (--TODO-- that is not really nice! (in the future, we should "bind" paramters to a prep-query!))
     $cQuery .= ' WHERE'
-        . ' nle.cEmail like "%' . $_REQUEST['cSearchField'] . '%"'
+        . ' nle.cEmail like "%' . preg_replace('/["§$?!<>\/\\\#]/', '', $_REQUEST['cSearchField']) . '%"'
     ;
 }
 // fetch all NL-receiver from the local shop-DB
@@ -38,7 +38,6 @@ $oNewsletterReceiver_arr = $oDbLayer->query($cQuery, 2);
 foreach ($oNewsletterReceiver_arr as $key => $oVal) {
     $oReceiverIndexHash_arr[$oVal->subscriberHash] = $key;
 }
-
 // re-fill the search-field
 if (isset($_REQUEST['cSearchField'])) {
     $smarty->assign('szSearchString', $_REQUEST['cSearchField']);
@@ -83,8 +82,8 @@ if ('' !== $szApiKey && '' !== $szListId) {
                 }
                 break;
             default:
-                // this should never occur unpunished!
-                throw new Exception('wrong POST!');
+                // this occurs during search
+                ;
         }
     }
     // read all members and their subscriber-state from MailChimp and show the results
