@@ -27,10 +27,6 @@
 				<Name>Abonnenten</Name>
 				<Filename>tab_abonnenten.php</Filename>
 			</Customlink>
-            <Customlink sort="3">
-                <Name>Dokumentation</Name>
-                <Filename>tab_documentation.php</Filename>
-            </Customlink>
 			<Settingslink sort="2">
 				<Setting type="text" initialValue="" sort="0" conf="N">
 					<Name>Allgemein</Name>

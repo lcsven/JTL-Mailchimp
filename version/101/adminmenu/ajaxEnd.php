@@ -26,7 +26,7 @@ if (validateToken()) {
         $szErrorMsg = '';
         $szListId   = $_GET['szListId'];
 
-        $oLists = MailChimpLists::getInstance(new RestClient($_GET['szApiKey'])); // --TODO-- code-repeat!
+        $oLists = MailChimpLists::getInstance(new RestClient($_GET['szApiKey']));
 
         $oLists->getAllLists();
         $szListName = $oLists->listNames[$szListId]; // get the real-name of the current list
