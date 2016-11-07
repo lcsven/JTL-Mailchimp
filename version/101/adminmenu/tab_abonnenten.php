@@ -112,7 +112,6 @@ $smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr)
        ->assign('szAjaxEndpoint', $oPlugin->cAdminmenuPfadURL . 'ajaxEnd.php')
        ->assign('szApiKey', $szApiKey)
        ->assign('szListId', $szListId)
-       ->assign('szListName', $oLists->listNames[$szListId])
 ;
 // set the following every time permanently, because they would switched via js
 if (null === $smarty->getTemplateVars('cHinweis')) {

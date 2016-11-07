@@ -29,6 +29,7 @@
         }
 
         // insert a "check-/un-check all"-handler
+        // maybe we should/could use the "global"-js AllMessages() in 'admin/templates/bootstrap/js/global.js'
         $('#checkAll').change(function() {
             $("input:checkbox").prop('checked', $(this).prop("checked"));
         });
@@ -67,6 +68,10 @@
 
 
     function ajaxAction(szAction, szSubscriberHash) {
+        // if no Mailchimp-APIkey is there, we did not procede here in general!
+        if ('' === $('input[name=szApiKey]').val()) {
+            return false;
+        }
         var oUserData = {}; // prepare a user-data-object (later used for json-encoding)
         if ('add' === szAction || 'update' === szAction) {
             // collect our user-data from the hidden-input fields (we do that only for the action "add"!)
@@ -105,7 +110,7 @@
             // restore the format of the clicked (span.i)
             $('span[name='+szAction+'][value='+szSubscriberHash+'] > i').attr('class', szFormatStore);
 
-            var oResponse    =  jQuery.parseJSON(response);
+            oResponse = jQuery.parseJSON(response);
             // at first, switch off all banners
             oErrorBanner.css('display', 'none');
             oSuccsBanner.css('display', 'none');
@@ -123,27 +128,11 @@
                     // in case of errors, we set a default fill
                     $('td[name=dLastSync][id='+szSubscriberHash+']').text('-');
                     $('td[name=szListName][id='+szSubscriberHash+']').text('-');
-                    // set the cols with responded values (sync-time and list-name)
-                    if (null !== oResponse.oRestResponse) {
-                        dSyncDate        = new Date(oResponse.oRestResponse.last_changed);
-                        var szLocaleDate = dSyncDate.toLocaleDateString();
-                        var szLocaleTime = paddZeroToString(dSyncDate.getHours())+':'+paddZeroToString(dSyncDate.getMinutes());
-                        $('td[name=dLastSync][id='+szSubscriberHash+']').text(szLocaleDate+' '+szLocaleTime);
-                        $('td[name=szListName][id='+szSubscriberHash+']').text(oResponse.szListName);
-                    }
                 }
                 if ('update' === szAction) {
                     // set the "cHinweis"-message
                     oSuccsBanner.html(oResponse.iSuccessCount+' Eintrag aktualisiert.');
                     oSuccsBanner.css('display', 'inherit');
-                    // set the cols with responded values (sync-time and list-name)
-                    if (null !== oResponse.oRestResponse) {
-                        dSyncDate        = new Date(oResponse.oRestResponse.last_changed);
-                        var szLocaleDate = dSyncDate.toLocaleDateString();
-                        var szLocaleTime = paddZeroToString(dSyncDate.getHours())+':'+paddZeroToString(dSyncDate.getMinutes());
-                        $('td[name=dLastSync][id='+szSubscriberHash+']').text(szLocaleDate+' '+szLocaleTime);
-                        $('td[name=szListName][id='+szSubscriberHash+']').text(oResponse.szListName);
-                    }
                 }
                 if ('remove' === szAction) {
                     // set the "cHinweis"-message
@@ -158,12 +147,24 @@
                     $('td[name=dLastSync][id='+szSubscriberHash+']').text('n.v.');
                     $('td[name=szListName][id='+szSubscriberHash+']').text('n.v.');
                 }
+                // set the cols with responded values (sync-time and list-name)
+                if (null !== oResponse.oRestResponse) {
+                    $('td[name=dLastSync][id='+szSubscriberHash+']').text(getNowDateTime());
+                    $('td[name=szListName][id='+szSubscriberHash+']').text(oResponse.szListName);
+                }
             } else {
                 // set the "cFehler"-message
                 oErrorBanner.text(oResponse.szErrorMsg);
                 oErrorBanner.css('display', 'inherit');
             }
         });
+    }
+
+    function getNowDateTime() {
+        var oDate         = new Date(oResponse.oRestResponse.last_changed);
+        var szLocaleDate  = paddZeroToString(oDate.getDate())+'.'+paddZeroToString(oDate.getMonth()+1)+'.'+oDate.getFullYear();
+        var szLocaleTime  = paddZeroToString(oDate.getHours())+':'+paddZeroToString(oDate.getMinutes());
+        return (szLocaleDate + ' ' + szLocaleTime);
     }
 
     function paddZeroToString(iNumber) {
