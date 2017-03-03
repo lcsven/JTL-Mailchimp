@@ -37,13 +37,22 @@
  *
  */
 
+/**
+ * Class MailChimpLists
+ */
 class MailChimpLists
 {
-    public $oRestClient = null;
+    /**
+     * @var RestClient
+     */
+    public $oRestClient;
 
+    /**
+     * MailChimpLists constructor.
+     * @param RestClient $oClient
+     */
     public function __construct(RestClient $oClient)
     {
         $this->RestClient = $oClient;
     }
-
 }

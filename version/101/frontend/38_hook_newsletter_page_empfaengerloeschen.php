@@ -27,4 +27,3 @@ if (isset($args_arr['oNewsletterEmpfaenger']) && is_object($args_arr['oNewslette
         }
     }
 }
-

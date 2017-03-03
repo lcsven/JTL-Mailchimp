@@ -3,9 +3,8 @@
  * HOOK_NEWSLETTER_PAGE_EMPFAENGEREINTRAGEN (ID 37)
  * Used to insert newsletter-receiver into MailChimp-list.
  *
- * @package     jtl_example_plugin
- * @author      JTL-Software-GmbH
- * @copyright   2015 JTL-Software-GmbH
+ * @package     jtl_mailchimp3
+ * @copyright   JTL-Software-GmbH
  */
 
 if (isset($args_arr['oNewsletterEmpfaenger']) && is_object($args_arr['oNewsletterEmpfaenger'])) {
@@ -21,18 +20,19 @@ if (isset($args_arr['oNewsletterEmpfaenger']) && is_object($args_arr['oNewslette
         // insert a new list-member into MailChimp
         $oMember = new MailChimpSubscriber();
         $oMember->set('email_address', $oNewsletterEmpfaenger->cEmail)
-                ->set('status'       , 'subscribed')
-                ->set('merge_fields' , array(
-                                  'FNAME' => $oNewsletterEmpfaenger->cVorname
-                                , 'LNAME' => $oNewsletterEmpfaenger->cNachname
-                                , 'GENDER' => ('m' === $oNewsletterEmpfaenger->cAnrede ? 'male' : 'female')
-                                )
+                ->set('status', 'subscribed')
+                ->set('merge_fields', [
+                        'FNAME'  => $oNewsletterEmpfaenger->cVorname,
+                        'LNAME'  => $oNewsletterEmpfaenger->cNachname,
+                        'GENDER' => 'm' === $oNewsletterEmpfaenger->cAnrede ? 'male' : 'female'
+                    ]
                 );
         try {
             $oResponse = json_decode($oLists->createMember($szListId, $oMember));
         } catch (ExceptionMailChimp $eMC) {
             // only log that error to not bother the end-user with MailChimp-errors!
-            Jtllog::writeLog('MailChimp3: ' . $eMC->getMessage(), JTLLOG_LEVEL_ERROR, false, "kPlugin", $oPlugin->kPlugin);
+            Jtllog::writeLog('MailChimp3: ' . $eMC->getMessage(), JTLLOG_LEVEL_ERROR, false, "kPlugin",
+                $oPlugin->kPlugin);
         }
     }
 }

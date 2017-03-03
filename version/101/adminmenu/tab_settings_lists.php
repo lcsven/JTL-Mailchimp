@@ -7,12 +7,12 @@
  * @copyright   2016 JTL-Software-GmbH
  */
 
-require_once($this->cAdminmenuPfad . 'inc/classLoader.php'); // "$this"  because we are in object-context of "Plugin"
-$options = array();
+require_once $this->cAdminmenuPfad . 'inc/classLoader.php'; // "$this"  because we are in object-context of "Plugin"
+$options = [];
 
-(isset($this->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key']))
-    ? $szApiKey = $this->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key']
-    : $szApiKey = '';
+$szApiKey = isset($this->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key'])
+    ? $this->oPluginEinstellungAssoc_arr['jtl_mailchimp3_api_key']
+    : '';
 
 if ('' !== $szApiKey) {
     $option        = new stdClass();
@@ -21,12 +21,12 @@ if ('' !== $szApiKey) {
     $option->nSort = 0;
     $options[]     = $option;
 
-    if (!isset($oLists) || (null === $oLists)) {
+    if (!isset($oLists)) {
         $oLists = MailChimpLists::getInstance(new RestClient($szApiKey));
 
         $vLists = $oLists->getAllLists();
-
-        for ($i = 0; $i < count($vLists); $i++) {
+        $count  = count($vLists);
+        for ($i = 0; $i < $count; $i++) {
             $option        = new stdClass();
             $option->cWert = $vLists[$i]->id;
             $option->cName = $vLists[$i]->name . ' (' . $vLists[$i]->id . ')';
@@ -36,5 +36,5 @@ if ('' !== $szApiKey) {
 
     }
 }
-return $options;
 
+return $options;

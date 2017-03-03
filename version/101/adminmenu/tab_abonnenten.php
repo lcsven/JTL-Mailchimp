@@ -7,7 +7,7 @@
  * @copyright   2016 JTL-Software-GmbH
  */
 
-require_once($oPlugin->cAdminmenuPfad . 'inc/classLoader.php');
+require_once $oPlugin->cAdminmenuPfad . 'inc/classLoader.php';
 
 $oDbLayer = Shop::DB();
 $cQuery   = ' SELECT'
@@ -83,12 +83,12 @@ if ('' !== $szApiKey && '' !== $szListId) {
                 break;
             default:
                 // this occurs during search
-                ;
         }
     }
     // read all members and their subscriber-state from MailChimp and show the results
     $oMembers_arr = $oLists->getAllMembers($szListId, 0);
-    for ($i = 0; $i < count($oNewsletterReceiver_arr); $i++) {
+    $memberCount  = count($oNewsletterReceiver_arr);
+    for ($i = 0; $i < $memberCount; $i++) {
         // insert(!) and update fields in our nl-receiver-array (e.g. remote states)
         if (array_key_exists($oNewsletterReceiver_arr[$i]->subscriberHash, $oLists->vIndexListMembers)) {
             $oMember = $oLists->findMemberBySubscriberHash($oNewsletterReceiver_arr[$i]->subscriberHash);
@@ -121,4 +121,3 @@ if (null === $smarty->getTemplateVars('cFehler')) {
     $smarty->assign('cFehler', '#');
 }
 $smarty->display($oPlugin->cAdminmenuPfad . 'templates/tab_abonnenten.tpl');
-

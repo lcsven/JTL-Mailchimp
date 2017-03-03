@@ -8,12 +8,12 @@
  */
 
 date_default_timezone_set('Europe/Berlin');
-require_once(dirname(__FILE__) . '/inc/classLoader.php');
+require_once __DIR__ . '/inc/classLoader.php';
 
 // try to guess our root-path, by the knowing "we are somewhere in includes/plugins/"
 $szRootPath = preg_split('/includes\/plugins/', __FILE__)[0];
 // "close the ring" to the main-application (for the correct _SESSION)
-require_once($szRootPath . '/admin/includes/admininclude.php');
+require_once $szRootPath . '/admin/includes/admininclude.php';
 
 $szListName    = '';
 $iSuccessCount = 0;
@@ -38,12 +38,12 @@ if (validateToken()) {
 
             $oMember = new MailChimpSubscriber();
             $oMember->set('email_address', $oUserData->szEmail)
-                    ->set('status'       ,  'subscribed')
-                    ->set('merge_fields' ,  array(
-                                      'FNAME'  => $oUserData->szFirstName
-                                    , 'LNAME'  => $oUserData->szLastName
-                                    , 'GENDER' => $oUserData->szGender // additional merge-field (not MC-default)
-                                    )
+                    ->set('status', 'subscribed')
+                    ->set('merge_fields', array(
+                            'FNAME'  => $oUserData->szFirstName,
+                            'LNAME'  => $oUserData->szLastName,
+                            'GENDER' => $oUserData->szGender // additional merge-field (not MC-default)
+                        )
                     );
         }
         // fire the action
@@ -81,4 +81,3 @@ $oResponse->nTimeElapsed  = $nTimeElapsed; // --OPTIONAL-- (not used yet)
 
 // send the response as json
 echo(json_encode($oResponse));
-

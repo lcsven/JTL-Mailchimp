@@ -7,25 +7,40 @@
  * @copyright   2016 JTL-Software-GmbH
  */
 
+/**
+ * Class RestClient
+ */
 class RestClient
 {
+    /**
+     * @var mixed|string
+     */
     private $szMcUrl = 'https://api.mailchimp.com/3.0';
+
+    /**
+     * @var string
+     */
     private $apiKey  = '';
-    private $oCurl   = null;
+
+    /**
+     * @var resource
+     */
+    private $oCurl;
 
     /**
      * construct and initialize a cURL-client object
+     * @param string $apiKey
      */
     public function __construct($apiKey)
     {
         $this->apiKey = $apiKey;
 
         // set a api-mirror, if any is pending at the api-key (defaults to 'us1')
-        $dc = "us1";
-        if (strstr($this->apiKey, "-")) {
-            list($key, $dc) = explode("-", $this->apiKey, 2);
+        $dc = 'us1';
+        if (strstr($this->apiKey, '-')) {
+            list($key, $dc) = explode('-', $this->apiKey, 2);
             if (!$dc) {
-                $dc = "us1";
+                $dc = 'us1';
             }
         }
         $this->szMcUrl = str_replace('https://api', 'https://'.$dc.'.api', $this->szMcUrl);
@@ -47,54 +62,57 @@ class RestClient
     /**
      * create one single entity
      *
-     * @param string  MailChimp sub-endpoint
-     * @param array  []
-     * @param array  array of parameters, which represent the entity
-     * @return string  json-string, "response-body"
+     * @param string $szEndpoint - MailChimp sub-endpoint
+     * @param array  $vGetParams
+     * @param array  $vParameters - array of parameters, which represent the entity
+     * @return string - json-string, "response-body"
      */
-    public function create($szEndpoint, $vGetParams = array(), $vParameters = array())
+    public function create($szEndpoint, $vGetParams = [], $vParameters = [])
     {
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'POST');
+
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
 
     /**
      * read one single entity
      *
-     * @param string  MailChimp sub-endpoint
-     * @param array  []
-     * @param array  []
-     * @return string  json-string, "response-body"
+     * @param string $szEndpoint - MailChimp sub-endpoint
+     * @param array  $vGetParams
+     * @param array  $vParameters
+     * @return string - json-string, "response-body"
      */
-    public function retrieve($szEndpoint, $vGetParams = array(), $vParameters = array())
+    public function retrieve($szEndpoint, $vGetParams = [], $vParameters = [])
     {
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'GET');
+        
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
 
     /**
      * update one single entity
      *
-     * @param string  MailChimp sub-endpoint
-     * @param array  []
-     * @param array  array of new parameters, which update the entity
+     * @param string $szEndpoint - MailChimp sub-endpoint
+     * @param array  $vGetParams
+     * @param array  $vParameters - array of new parameters, which update the entity
      * @return string  json-string, "response-body"
      */
-    public function update($szEndpoint, $vGetParams = array(), $vParameters = array())
+    public function update($szEndpoint, $vGetParams = [], $vParameters = [])
     {
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        
         return $this->call($szEndpoint, $vGetParams, $vParameters);
     }
 
     /**
      * delete one single entity
      *
-     * @param string  MailChimp sub-endpoint
-     * @param array  []
-     * @param array  []
-     * @return string  json-string, "response-body"
+     * @param string $szEndpoint - MailChimp sub-endpoint
+     * @param array  $vGetParams
+     * @param array  $vParameters
+     * @return string - json-string, "response-body"
      */
-    public function destroy($szEndpoint, $vGetParams = array(), $vParameters = array())
+    public function destroy($szEndpoint, $vGetParams = [], $vParameters = [])
     {
         curl_setopt($this->oCurl, CURLOPT_CUSTOMREQUEST, 'DELETE');
         return $this->call($szEndpoint, $vGetParams, $vParameters);
@@ -104,10 +122,10 @@ class RestClient
     /**
      * do the cURL-call
      *
-     * @param string  MailChimp sub-endpoint
-     * @param array  a array of query-string-parameters as key->val pairs
-     * @param array  array of new parameters, which update the entity
-     * @return string  json-string, "response-body"
+     * @param string $szEndpoint - MailChimp sub-endpoint
+     * @param array  $vGetParams - a array of query-string-parameters as key->val pairs
+     * @param array  $vParameters - array of new parameters, which update the entity
+     * @return string - json-string, "response-body"
      */
     private function call($szEndpoint, $vGetParams, $vParameters)
     {
@@ -124,9 +142,6 @@ class RestClient
         curl_setopt($this->oCurl, CURLOPT_POSTFIELDS, $vParameters);
 
         // execute the cURL-call
-        $szResponse = curl_exec($this->oCurl);
-
-        return $szResponse; // the response is still JSON(!)
+        return curl_exec($this->oCurl);
     }
 }
-
