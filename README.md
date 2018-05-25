@@ -11,7 +11,7 @@ Bevor Sie beginnen, benötigen Sie folgende Dinge:
 * ein **MailChimp-Konto**
 * **eine Liste** in Ihrem MailChimp-Konto, welche Ihre Shop-Newsletterempfänger aufnimmt
 
-Sie bekommen Diese z.B. unter [MailChimp](https://login.mailchimp.com/signup).
+Sie bekommen diese z.B. unter [MailChimp](https://login.mailchimp.com/signup).
 
 Nachdem Sie sich Ihr Konto erstellt haben, brauchen Sie noch eine Liste,
 zu der Ihr Shop Ihre Newsletterempfänger hinzufügen kann.
@@ -53,7 +53,7 @@ _klicken Sie nochmals auf Einstellungen Speichern_.
 #### Automatischer Abgleich
 
 Diese Einstellung ist standardmäßig auf "ON" gesetzt und bewirkt das automatische Eintragen,
-bzw. das automatische Löschen von Newsletter-Empfängern, auf Ihrer MailChimp-Liste.
+bzw. das automatische Löschen von Newsletterempfängern, auf Ihrer MailChimp-Liste.
 
 
 
@@ -64,26 +64,26 @@ bzw. das automatische Löschen von Newsletter-Empfängern, auf Ihrer MailChimp-L
 Das Suchfeld, im oberen Bereich Ihres Plugins, wird dazu benutzt, um gezielt nach e-Mail-Adressen von
 Newsletterempfängern zu suchen.
 
-Es reduziert die aktuell "betroffener" Menge Newsletterempfänger (siehe auch "Alle übertragen").
+Es reduziert die aktuell "betroffene" Menge Newsletterempfänger (siehe auch "Alle übertragen").
 
 #### Gewählte übertragen
 
-Dieser Button erlaubt es Ihren, in Kombination mit den "checkboxes" vor den Namen der Newsletter-Empfänger,
-eine Auswahl Dieser an Ihre MailChimp-Liste zu schicken.
+Dieser Button erlaubt es Ihnen, in Kombination mit den Checkboxes vor den Namen der Newsletterempfänger,
+eine Auswahl dieser an Ihre MailChimp-Liste zu schicken.
 
-Die checkbox "Alle auswählen", am Fuße der jeweiligen Listen-Seite, bezieht sich hier immer nur
+Die Checkbox "Alle auswählen", am Fuße der jeweiligen Listen-Seite, bezieht sich hier immer nur
 auf die aktuelle Seite.
 
 #### Alle übertragen
 
-Mit dieser Aktion werden sämtliche Newsletter-Empfänger, die im Shop registriert sind,
+Mit dieser Aktion werden sämtliche Newsletterempfänger, die im Shop registriert sind,
 an MailChimp übertragen.
 
-**BEACHTE:** Dieser Vorgang kann, je nach Anzahl der Newsletterempfänger, einige Zeit in Anspruch nehmen.
+**ACHTUNG:** Dieser Vorgang kann - je nach Anzahl der Newsletterempfänger - einige Zeit in Anspruch nehmen.
 
-**BEACHTE:** Diese Funktion kann mit dem Suchfeld eingeschränkt werden.
+**Bachten Sie:** Diese Funktion kann mit dem Suchfeld eingeschränkt werden.
 
-Ist eine Suche aktiv, werden mit dem "Alle übertragen"-Button ausschließlich alle von der Suche erfaßten
+Ist eine Suche aktiv, werden mit dem "Alle übertragen"-Button ausschließlich alle von der Suche erfassten
 Datensätze an MailChimp übertragen.
 
 Da MailChimp den Datensatz eines Newsletterempfängers anhand seiner e-Mail-Adresse identifiziert,
@@ -118,12 +118,12 @@ in Ihrem MailChimp-Konto ein neues "Merge"-Feld anzulegen.
 
 Da MailChimp eine weltweit intensiv genutzte Plattform ist, ist man dort gezwungen, starken Gebraucht
 von Zwischenspeicherungs-Mechanismen ("caches") zu machen.
-Dies führt dazu, daß beispielsweise die Listen-Anzeige im Benutzer-Konto nicht immer umgehend
+Dies führt dazu, dass beispielsweise die Listen-Anzeige im Benutzer-Konto nicht immer umgehend
 die korrekten und tatsächlichen Anzahlen von Newsletterempfängern darstellt.
 
-Es kann somit sein, daß ein soeben eingetragener Newsletter-Empfänger nicht sofort in der entsprechenden
+Es kann somit sein, dass ein soeben eingetragener Newsletterempfänger nicht sofort in der entsprechenden
 MailChimp-Liste sichtbar ist.
 
-Dies ist kein Fehler, sondern dem Umstand geschuldet, daß sich hier viele System miteinander abgleichen müssen.
+Dies ist kein Fehler, sondern dem Umstand geschuldet, dass sich hier viele System miteinander abgleichen müssen.
 
 
