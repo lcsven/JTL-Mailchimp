@@ -23,7 +23,6 @@ if ('' !== $szApiKey) {
 
     if (!isset($oLists)) {
         $oLists = MailChimpLists::getInstance(new RestClient($szApiKey));
-
         $vLists = $oLists->getAllLists();
         $count  = count($vLists);
         for ($i = 0; $i < $count; $i++) {
