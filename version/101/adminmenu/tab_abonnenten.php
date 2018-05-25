@@ -56,7 +56,7 @@ if ('' !== $szApiKey && '' !== $szListId) {
         switch (true) {
             case (isset($_POST['sync']) && 'sync_part' === $_POST['sync']):
                 // transfer the selected members to MailChimp
-                $oNewsletterReceiverSelected_arr = array();
+                $oNewsletterReceiverSelected_arr = [];
                 foreach ($_POST as $key => $val) {
                     if (preg_match('/^id_/', $key)) {
                         $oNewsletterReceiverSelected_arr[] = $oNewsletterReceiver_arr[$oReceiverIndexHash_arr[$val]];
@@ -111,8 +111,7 @@ $smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr)
        ->assign('oPagiMailChimp', $oPagiMailChimp) // pagination
        ->assign('szAjaxEndpoint', $oPlugin->cAdminmenuPfadURL . 'ajaxEnd.php')
        ->assign('szApiKey', $szApiKey)
-       ->assign('szListId', $szListId)
-;
+       ->assign('szListId', $szListId);
 // set the following every time permanently, because they would switched via js
 if (null === $smarty->getTemplateVars('cHinweis')) {
     $smarty->assign('cHinweis', '#');
