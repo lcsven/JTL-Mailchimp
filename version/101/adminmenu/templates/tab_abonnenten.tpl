@@ -182,17 +182,18 @@
         <div id="settings">
             {* search *}
             <div class="input-group">
-            <span class="input-group-addon">
-                <label for="cSearchField">e-Mail Suche:</label>
-            </span>
-                <input class="form-control" id="cSearchField" name="cSearchField" type="text"
-                       value="{if isset($szSearchString) && $szSearchString|strlen > 0}{$szSearchString}{/if}"/>
-                <span class="input-group-btn">
-                <button name="search" type="submit" class="btn btn-primary" value="email_search">
-                    <i class="fa fa-search"></i> Suchen
-                </button>
-            </span>
+                <span class="input-group-addon">
+                    <label for="cSearchField">e-Mail Suche:</label>
+                </span>
+                    <input class="form-control" id="cSearchField" name="cSearchField" type="text"
+                           value="{if isset($szSearchString) && $szSearchString|strlen > 0}{$szSearchString}{/if}"/>
+                    <span class="input-group-btn">
+                    <button name="search" type="submit" class="btn btn-primary" value="email_search">
+                        <i class="fa fa-search"></i> Suchen
+                    </button>
+                </span>
             </div>
+        </div>
     </form>
 
     {* pagination *}
@@ -281,10 +282,10 @@
             <tfoot>
             <tr>
                 <td>
-                    <input type="checkbox" id="checkAll"></input>
+                    <input type="checkbox" id="checkAll" />
                 </td>
                 <td colspan="7">
-                    <b id="checkAll">Alle ausw&auml;hlen</b>
+                    <label for="checkAll">Alle ausw&auml;hlen</label>
                 </td>
             </tr>
             </tfoot>
