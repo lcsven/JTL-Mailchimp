@@ -24,16 +24,18 @@ $cQuery   = ' SELECT'
         . ' LEFT JOIN tkunde ON tkunde.kKunde = nle.kKunde'
         . ' LEFT JOIN tkundengruppe ON tkunde.kKundengruppe = tkundengruppe.kKundengruppe'
 ;
+$vBindings = [];
 if (isset($_REQUEST['cSearchField']) && '' !== $_REQUEST['cSearchField']
     ) {
     // if we're in search-mode, we extend our SQL by a WHERE-clause
-    // (--TODO-- that is not really nice! (in the future, we should "bind" paramters to a prep-query!))
-    $cQuery .= ' WHERE'
-        . ' nle.cEmail like "%' . preg_replace('/["§$?!<>\/\\\#]/', '', $_REQUEST['cSearchField']) . '%"'
-    ;
+    $cQuery .= ' WHERE '
+        . ' nle.cEmail like :emailFilter';
+    // additionally clean-up the searchfield-input
+    $vBindings = ['emailFilter' => '%' . preg_replace('/["§$?!<>\/\\\#]/u', '', $_REQUEST['cSearchField']) . '%'];
 }
 // fetch all NL-receiver from the local shop-DB
-$oNewsletterReceiver_arr = $oDbLayer->query($cQuery, 2);
+$oNewsletterReceiver_arr = $oDbLayer->queryPrepared($cQuery, $vBindings, 2);
+
 // build a  receiver index-hash
 foreach ($oNewsletterReceiver_arr as $key => $oVal) {
     $oReceiverIndexHash_arr[$oVal->subscriberHash] = $key;
@@ -83,12 +85,12 @@ if ('' !== $szApiKey && '' !== $szListId) {
                 break;
             default:
                 // this occurs during search
-                ;
         }
     }
     // read all members and their subscriber-state from MailChimp and show the results
-    $oMembers_arr = $oLists->getAllMembers($szListId, 0);
-    for ($i = 0; $i < count($oNewsletterReceiver_arr); $i++) {
+    $oMembers_arr   = $oLists->getAllMembers($szListId, 0);
+    $iReceiverCount = count($oNewsletterReceiver_arr);
+    for ($i = 0; $i < $iReceiverCount; $i++) {
         // insert(!) and update fields in our nl-receiver-array (e.g. remote states)
         if (array_key_exists($oNewsletterReceiver_arr[$i]->subscriberHash, $oLists->vIndexListMembers)) {
             $oMember = $oLists->findMemberBySubscriberHash($oNewsletterReceiver_arr[$i]->subscriberHash);
@@ -111,8 +113,7 @@ $smarty->assign('oNewsletterReceiver_arr', $oNewsletterReceiver_arr)
        ->assign('oPagiMailChimp', $oPagiMailChimp) // pagination
        ->assign('szAjaxEndpoint', $oPlugin->cAdminmenuPfadURL . 'ajaxEnd.php')
        ->assign('szApiKey', $szApiKey)
-       ->assign('szListId', $szListId)
-;
+       ->assign('szListId', $szListId);
 // set the following every time permanently, because they would switched via js
 if (null === $smarty->getTemplateVars('cHinweis')) {
     $smarty->assign('cHinweis', '#');
