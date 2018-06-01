@@ -84,17 +84,17 @@
 
             var szFormatStore = ''; // to hold the class-string of the clicked element, during ajax-load(er)
             $.ajax({
-                method: 'get'
-                , cache: false // to prevent the caching of the browser (but works only with GET, because there ist a time-hash-param)
-                , async: true // we did not wait for one operation is finished (but if it's necessary, so use 'false' here)
-                , url: szAjaxEndpoint
-                , data: {
-                    action: szAction
-                    , szSubscriberHash: szSubscriberHash
-                    , szApiKey: $('input[name=szApiKey]').val()
-                    , szListId: $('input[name=szListId]').val()
-                    , userData: JSON.stringify(oUserData)
-                    , token: $('[name$=jtl_token]').val()
+                  method :  'get'
+                , cache  :  false // to prevent the caching of the browser (but works only with GET, because there ist a time-hash-param)
+                , async  :  true // we did not wait for one operation is finished (but if it's necessary, so use 'false' here)
+                , url    :  szAjaxEndpoint
+                , data   :  {
+                      action           : szAction
+                    , szSubscriberHash : szSubscriberHash
+                    , szApiKey         : $('input[name=szApiKey]').val()
+                    , szListId         : $('input[name=szListId]').val()
+                    , userData         : JSON.stringify(oUserData)
+                    , token            : $('[name$=jtl_token]').val()
                 }
                 , beforeSend: function (request) {
                     request.setRequestHeader('Pragma', 'no-cache'); // to prevent the server to send cached stuff
@@ -161,9 +161,9 @@
         }
 
         function getNowDateTime() {
-            var oDate = new Date(oResponse.oRestResponse.last_changed);
-            var szLocaleDate = paddZeroToString(oDate.getDate()) + '.' + paddZeroToString(oDate.getMonth() + 1) + '.' + oDate.getFullYear();
-            var szLocaleTime = paddZeroToString(oDate.getHours()) + ':' + paddZeroToString(oDate.getMinutes());
+            var oDate         = new Date(oResponse.oRestResponse.last_changed);
+            var szLocaleDate  = paddZeroToString(oDate.getDate()) + '.' + paddZeroToString(oDate.getMonth() + 1) + '.' + oDate.getFullYear();
+            var szLocaleTime  = paddZeroToString(oDate.getHours()) + ':' + paddZeroToString(oDate.getMinutes());
             return (szLocaleDate + ' ' + szLocaleTime);
         }
 
@@ -185,9 +185,9 @@
                 <span class="input-group-addon">
                     <label for="cSearchField">e-Mail Suche:</label>
                 </span>
-                    <input class="form-control" id="cSearchField" name="cSearchField" type="text"
-                           value="{if isset($szSearchString) && $szSearchString|strlen > 0}{$szSearchString}{/if}"/>
-                    <span class="input-group-btn">
+                <input class="form-control" id="cSearchField" name="cSearchField" type="text"
+                       value="{if isset($szSearchString) && $szSearchString|strlen > 0}{$szSearchString}{/if}"/>
+                <span class="input-group-btn">
                     <button name="search" type="submit" class="btn btn-primary" value="email_search">
                         <i class="fa fa-search"></i> Suchen
                     </button>
@@ -259,21 +259,21 @@
                                   class="btn btn-warning btn-xs" name="update" title="aktualisieren"
                                   value="{$oNewsletterReceiver->subscriberHash}"
                                   onclick="ajaxAction('update', '{$oNewsletterReceiver->subscriberHash}')">
-                            <i class="fa fa-refresh"></i>
-                        </span>
+                                <i class="fa fa-refresh"></i>
+                            </span>
                             <span style="display:{(true === $display) ? 'inline-block' : 'none'};"
                                   class="btn btn-danger btn-xs" name="remove" title="von Liste l&ouml;schen"
                                   value="{$oNewsletterReceiver->subscriberHash}"
                                   onclick="ajaxAction('remove', '{$oNewsletterReceiver->subscriberHash}')">
-                            <i class="fa fa-remove"></i>
-                        </span>
+                                <i class="fa fa-remove"></i>
+                            </span>
 
                             <span style="display:{(false === $display) ? 'inline-block' : 'none'};"
                                   class="btn btn-success btn-xs" name="add" title="mit Liste synchronisieren"
                                   value="{$oNewsletterReceiver->subscriberHash}"
                                   onclick="ajaxAction('add', '{$oNewsletterReceiver->subscriberHash}')">
-                            <i class="fa fa-share-square-o"></i>
-                        </span>
+                                <i class="fa fa-share-square-o"></i>
+                            </span>
                         </td>
                     </tr>
                 {/foreach}
