@@ -17,7 +17,7 @@ Nachdem Sie sich Ihr Konto erstellt haben, brauchen Sie noch eine Liste,
 zu der Ihr Shop Ihre Newsletterempfänger hinzufügen kann.
 
 Haben Sie diese Voraussetzungen erfüllt, können Sie mit der Einrichtung Ihres
-MailChimp3-Plugins, wie im Folgenden beschrieben, vorfahren.
+MailChimp3-Plugins, wie im Folgenden beschrieben, fortfahren.
 
 
 ### Tab "Einstellungen"
@@ -116,7 +116,7 @@ in Ihrem MailChimp-Konto ein neues "Merge"-Feld anzulegen.
 
 ### "Known Problems"
 
-Da MailChimp eine weltweit intensiv genutzte Plattform ist, ist man dort gezwungen, starken Gebraucht
+Da MailChimp eine weltweit intensiv genutzte Plattform ist, ist man dort gezwungen, starken Gebrauch
 von Zwischenspeicherungs-Mechanismen ("caches") zu machen.
 Dies führt dazu, dass beispielsweise die Listen-Anzeige im Benutzer-Konto nicht immer umgehend
 die korrekten und tatsächlichen Anzahlen von Newsletterempfängern darstellt.
